@@ -103,8 +103,8 @@
       <tags>
         <tag>rhca</tag>
         <tag>linux</tag>
-        <tag>awk</tag>
         <tag>shell</tag>
+        <tag>awk</tag>
         <tag>sed</tag>
         <tag>pandas</tag>
         <tag>openpyxl</tag>
@@ -234,12 +234,12 @@
       </categories>
       <tags>
         <tag>linux</tag>
-        <tag>awk</tag>
-        <tag>cloud</tag>
         <tag>program</tag>
+        <tag>cloud</tag>
+        <tag>fabric</tag>
+        <tag>awk</tag>
         <tag>kvm</tag>
         <tag>VManagePlatform</tag>
-        <tag>fabric</tag>
         <tag>libguestfs-tools-c</tag>
       </tags>
   </entry>
@@ -291,9 +291,9 @@
       <tags>
         <tag>rhca</tag>
         <tag>linux</tag>
+        <tag>故障处理</tag>
         <tag>tcp</tag>
         <tag>Linux内核优化</tag>
-        <tag>故障处理</tag>
       </tags>
   </entry>
   <entry>
@@ -560,11 +560,11 @@
       <tags>
         <tag>rhca</tag>
         <tag>linux</tag>
-        <tag>shell</tag>
         <tag>nginx</tag>
         <tag>keepalived</tag>
         <tag>kernel</tag>
         <tag>grub</tag>
+        <tag>shell</tag>
         <tag>Linux系统定制</tag>
       </tags>
   </entry>
@@ -680,10 +680,10 @@
       </categories>
       <tags>
         <tag>linux</tag>
-        <tag>awk</tag>
+        <tag>python</tag>
         <tag>shell</tag>
         <tag>fabric</tag>
-        <tag>python</tag>
+        <tag>awk</tag>
         <tag>expect</tag>
         <tag>isilon</tag>
       </tags>
@@ -3539,8 +3539,8 @@ del 语句删除函数对象
       </categories>
       <tags>
         <tag>linux</tag>
-        <tag>cloud</tag>
         <tag>program</tag>
+        <tag>cloud</tag>
       </tags>
   </entry>
   <entry>
@@ -4859,8 +4859,8 @@ DN: Data Node   NN: Name Node SNN: Secondary Name Node
         <tag>rhca</tag>
         <tag>linux</tag>
         <tag>hyperledger</tag>
-        <tag>fabirc</tag>
         <tag>区块链</tag>
+        <tag>fabirc</tag>
       </tags>
   </entry>
   <entry>
@@ -6287,8 +6287,8 @@ awk &apos;!/^UUID/&#123;print $1&#125;&apos; /etc/fstab
         <tag>rhca</tag>
         <tag>linux</tag>
         <tag>hyperledger</tag>
-        <tag>区块链</tag>
         <tag>fabric</tag>
+        <tag>区块链</tag>
       </tags>
   </entry>
   <entry>

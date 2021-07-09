@@ -36,13 +36,13 @@
     
       <category term="linux" scheme="https://www.asjin.com/tags/linux/"/>
     
-      <category term="awk" scheme="https://www.asjin.com/tags/awk/"/>
+      <category term="python" scheme="https://www.asjin.com/tags/python/"/>
     
       <category term="shell" scheme="https://www.asjin.com/tags/shell/"/>
     
       <category term="fabric" scheme="https://www.asjin.com/tags/fabric/"/>
     
-      <category term="python" scheme="https://www.asjin.com/tags/python/"/>
+      <category term="awk" scheme="https://www.asjin.com/tags/awk/"/>
     
       <category term="expect" scheme="https://www.asjin.com/tags/expect/"/>
     
@@ -124,9 +124,9 @@
     
       <category term="linux" scheme="https://www.asjin.com/tags/linux/"/>
     
-      <category term="awk" scheme="https://www.asjin.com/tags/awk/"/>
-    
       <category term="shell" scheme="https://www.asjin.com/tags/shell/"/>
+    
+      <category term="awk" scheme="https://www.asjin.com/tags/awk/"/>
     
       <category term="sed" scheme="https://www.asjin.com/tags/sed/"/>
     
@@ -759,9 +759,9 @@
     
       <category term="linux" scheme="https://www.asjin.com/tags/linux/"/>
     
-      <category term="cloud" scheme="https://www.asjin.com/tags/cloud/"/>
-    
       <category term="program" scheme="https://www.asjin.com/tags/program/"/>
+    
+      <category term="cloud" scheme="https://www.asjin.com/tags/cloud/"/>
     
   </entry>
   
@@ -965,17 +965,17 @@
     
       <category term="linux" scheme="https://www.asjin.com/tags/linux/"/>
     
-      <category term="awk" scheme="https://www.asjin.com/tags/awk/"/>
+      <category term="program" scheme="https://www.asjin.com/tags/program/"/>
     
       <category term="cloud" scheme="https://www.asjin.com/tags/cloud/"/>
     
-      <category term="program" scheme="https://www.asjin.com/tags/program/"/>
+      <category term="fabric" scheme="https://www.asjin.com/tags/fabric/"/>
+    
+      <category term="awk" scheme="https://www.asjin.com/tags/awk/"/>
     
       <category term="kvm" scheme="https://www.asjin.com/tags/kvm/"/>
     
       <category term="VManagePlatform" scheme="https://www.asjin.com/tags/VManagePlatform/"/>
-    
-      <category term="fabric" scheme="https://www.asjin.com/tags/fabric/"/>
     
       <category term="libguestfs-tools-c" scheme="https://www.asjin.com/tags/libguestfs-tools-c/"/>
     
@@ -1003,11 +1003,11 @@
     
       <category term="linux" scheme="https://www.asjin.com/tags/linux/"/>
     
+      <category term="故障处理" scheme="https://www.asjin.com/tags/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/"/>
+    
       <category term="tcp" scheme="https://www.asjin.com/tags/tcp/"/>
     
       <category term="Linux内核优化" scheme="https://www.asjin.com/tags/Linux%E5%86%85%E6%A0%B8%E4%BC%98%E5%8C%96/"/>
-    
-      <category term="故障处理" scheme="https://www.asjin.com/tags/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/"/>
     
   </entry>
   
@@ -1189,8 +1189,6 @@
     
       <category term="linux" scheme="https://www.asjin.com/tags/linux/"/>
     
-      <category term="shell" scheme="https://www.asjin.com/tags/shell/"/>
-    
       <category term="nginx" scheme="https://www.asjin.com/tags/nginx/"/>
     
       <category term="keepalived" scheme="https://www.asjin.com/tags/keepalived/"/>
@@ -1198,6 +1196,8 @@
       <category term="kernel" scheme="https://www.asjin.com/tags/kernel/"/>
     
       <category term="grub" scheme="https://www.asjin.com/tags/grub/"/>
+    
+      <category term="shell" scheme="https://www.asjin.com/tags/shell/"/>
     
       <category term="Linux系统定制" scheme="https://www.asjin.com/tags/Linux%E7%B3%BB%E7%BB%9F%E5%AE%9A%E5%88%B6/"/>
     
@@ -1345,9 +1345,9 @@
     
       <category term="hyperledger" scheme="https://www.asjin.com/tags/hyperledger/"/>
     
-      <category term="fabirc" scheme="https://www.asjin.com/tags/fabirc/"/>
-    
       <category term="区块链" scheme="https://www.asjin.com/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/"/>
+    
+      <category term="fabirc" scheme="https://www.asjin.com/tags/fabirc/"/>
     
   </entry>
   
@@ -1627,9 +1627,9 @@
     
       <category term="hyperledger" scheme="https://www.asjin.com/tags/hyperledger/"/>
     
-      <category term="区块链" scheme="https://www.asjin.com/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/"/>
-    
       <category term="fabric" scheme="https://www.asjin.com/tags/fabric/"/>
+    
+      <category term="区块链" scheme="https://www.asjin.com/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/"/>
     
   </entry>
   
