@@ -4810,3 +4810,37 @@ body {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
 }
+/*鼠标样式*/
+body,
+html {
+  cursor: url("/images/ssjinyao.cur"), auto !important;
+}
+a,
+img {
+  cursor: url("/images/link.cur"), auto !important;
+}
+/*a标签*/
+a:hover {
+  cursor: url("/images/link.cur"), auto !important;
+}
+/*按钮*/
+button:hover {
+  cursor: url("/images/link.cur"), auto !important;
+}
+/*i标签*/
+i:hover {
+  cursor: url("/images/link.cur"), auto !important;
+}
+/*页脚a标签*/
+#footer-wrap a:hover {
+  cursor: url("/images/link.cur"), auto !important;
+}
+/*分页器*/
+#pagination .page-number:hover {
+  cursor: url("/images/link.cur"), auto !important;
+}
+/*头部的导航栏*/
+#nav .site-page:hover {
+  cursor: url("/images/link.cur"), auto !important;
+}
+/*鼠标样式END*/
