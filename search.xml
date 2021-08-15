@@ -560,8 +560,8 @@
       <tags>
         <tag>rhca</tag>
         <tag>linux</tag>
-        <tag>keepalived</tag>
         <tag>nginx</tag>
+        <tag>keepalived</tag>
         <tag>kernel</tag>
         <tag>grub</tag>
         <tag>shell</tag>
@@ -655,10 +655,10 @@
       <tags>
         <tag>rhca</tag>
         <tag>linux</tag>
-        <tag>keepalived</tag>
         <tag>rsync</tag>
         <tag>nginx</tag>
         <tag>inotify</tag>
+        <tag>keepalived</tag>
       </tags>
   </entry>
   <entry>

@@ -1167,9 +1167,9 @@
     
       <category term="linux" scheme="https://www.asjin.com/tags/linux/"/>
     
-      <category term="keepalived" scheme="https://www.asjin.com/tags/keepalived/"/>
-    
       <category term="nginx" scheme="https://www.asjin.com/tags/nginx/"/>
+    
+      <category term="keepalived" scheme="https://www.asjin.com/tags/keepalived/"/>
     
       <category term="kernel" scheme="https://www.asjin.com/tags/kernel/"/>
     
@@ -1259,13 +1259,13 @@
     
       <category term="linux" scheme="https://www.asjin.com/tags/linux/"/>
     
-      <category term="keepalived" scheme="https://www.asjin.com/tags/keepalived/"/>
-    
       <category term="rsync" scheme="https://www.asjin.com/tags/rsync/"/>
     
       <category term="nginx" scheme="https://www.asjin.com/tags/nginx/"/>
     
       <category term="inotify" scheme="https://www.asjin.com/tags/inotify/"/>
+    
+      <category term="keepalived" scheme="https://www.asjin.com/tags/keepalived/"/>
     
   </entry>
   
