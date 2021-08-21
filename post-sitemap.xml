@@ -7,8 +7,64 @@
     </url>
 
     <url>
+        <loc>https://www.asjin.com/2019/06/15/kubernetes%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%957/</loc>
+        <lastmod>2021-08-21T06:42:13.664Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://www.asjin.com/2019/05/30/kubernetes%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%956/</loc>
+        <lastmod>2021-08-21T06:41:50.620Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://www.asjin.com/2019/05/24/kubernetes%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%955/</loc>
+        <lastmod>2021-08-21T06:41:46.073Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://www.asjin.com/2019/05/17/kubernets%E5%AE%9E%E6%93%8D%E8%AE%B0%E5%BD%953/</loc>
+        <lastmod>2021-08-21T06:41:40.494Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://www.asjin.com/2019/05/22/kubernetes%E5%AE%9E%E6%93%8D%E8%AE%B0%E5%BD%954/</loc>
+        <lastmod>2021-08-21T06:41:32.416Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://www.asjin.com/2019/05/10/kubernetes%E5%AE%9E%E6%93%8D%E8%AE%B0%E5%BD%952/</loc>
+        <lastmod>2021-08-21T06:41:22.598Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://www.asjin.com/2019/04/25/kubernetes%E5%AE%9E%E6%93%8D%E8%AE%B0%E5%BD%951/</loc>
+        <lastmod>2021-08-21T06:41:17.010Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://www.asjin.com/2021/08/20/kubernetes%E8%AF%81%E4%B9%A6%E4%BF%AE%E5%A4%8D/</loc>
-        <lastmod>2021-08-21T06:36:36.924Z</lastmod>
+        <lastmod>2021-08-21T06:39:42.151Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -17,14 +73,6 @@
     <url>
         <loc>https://www.asjin.com/2021/08/21/SGE+bash+awk+sed+Python+WebStackPage%E5%AE%9E%E7%8E%B0P%E7%BA%A7%E6%95%B0%E6%8D%AE%E5%B9%B6%E5%8F%91%E6%89%AB%E6%8F%8F%E4%B8%8E%E4%B8%8B%E6%9C%BA%E6%95%B0%E6%8D%AE%E6%8A%A5%E8%A1%A8%E5%85%AC%E7%A4%BA/</loc>
         <lastmod>2021-08-21T06:35:58.767Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://www.asjin.com/2019/05/24/kubernetes%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%955/</loc>
-        <lastmod>2021-08-21T05:45:24.530Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -287,46 +335,6 @@
     </url>
 
     <url>
-        <loc>https://www.asjin.com/2019/04/25/kubernetes%E5%AE%9E%E6%93%8D%E8%AE%B0%E5%BD%951/</loc>
-        <lastmod>2021-04-18T03:32:01.684Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://www.asjin.com/2019/05/10/kubernetes%E5%AE%9E%E6%93%8D%E8%AE%B0%E5%BD%952/</loc>
-        <lastmod>2021-04-18T03:31:55.881Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://www.asjin.com/2021/04/18/kubernets%E5%AE%9E%E6%93%8D%E8%AE%B0%E5%BD%953/</loc>
-        <lastmod>2021-04-18T03:31:55.845Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://www.asjin.com/2019/05/22/kubernetes%E5%AE%9E%E6%93%8D%E8%AE%B0%E5%BD%954/</loc>
-        <lastmod>2021-04-18T03:31:44.348Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://www.asjin.com/2019/05/30/kubernetes%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%956/</loc>
-        <lastmod>2021-04-18T03:31:44.318Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
         <loc>https://www.asjin.com/2018/06/18/awk%E7%9A%84%E7%BB%83%E4%B9%A0/</loc>
         <lastmod>2021-04-18T03:31:23.154Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -417,14 +425,6 @@
     <url>
         <loc>https://www.asjin.com/2019/03/11/nginx-lua-redis%E5%AE%9E%E7%9F%AD%E9%93%BE%E6%8E%A5%E8%BD%AC%E5%8F%91%E9%95%BF%E9%93%BE%E6%8E%A5/</loc>
         <lastmod>2021-04-18T03:27:44.356Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://www.asjin.com/2019/06/15/kubernetes%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%957/</loc>
-        <lastmod>2021-04-18T03:27:18.483Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
