@@ -7,6 +7,30 @@
     </url>
 
     <url>
+        <loc>https://www.asjin.com/2021/08/20/kubernetes%E8%AF%81%E4%B9%A6%E4%BF%AE%E5%A4%8D/</loc>
+        <lastmod>2021-08-21T06:18:36.959Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://www.asjin.com/2021/04/18/SGE+bash+awk+sed+Python+WebStackPage%E5%AE%9E%E7%8E%B0P%E7%BA%A7%E6%95%B0%E6%8D%AE%E5%B9%B6%E5%8F%91%E6%89%AB%E6%8F%8F%E4%B8%8E%E4%B8%8B%E6%9C%BA%E6%95%B0%E6%8D%AE%E6%8A%A5%E8%A1%A8%E5%85%AC%E7%A4%BA/</loc>
+        <lastmod>2021-08-21T05:57:16.950Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://www.asjin.com/2019/05/24/kubernetes%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%955/</loc>
+        <lastmod>2021-08-21T05:45:24.530Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://www.asjin.com/2021/07/09/isilon-%E8%8D%A3%E4%B9%8B%E8%81%94%E5%AD%98%E5%82%A8%E9%85%8D%E9%A2%9D%E8%B0%83%E6%95%B4%E8%87%AA%E5%8A%A8%E5%8C%96/</loc>
         <lastmod>2021-07-09T05:16:56.973Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -303,14 +327,6 @@
     </url>
 
     <url>
-        <loc>https://www.asjin.com/2019/05/24/kubernetes%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%955/</loc>
-        <lastmod>2021-04-18T03:31:44.283Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
         <loc>https://www.asjin.com/2018/06/18/awk%E7%9A%84%E7%BB%83%E4%B9%A0/</loc>
         <lastmod>2021-04-18T03:31:23.154Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -545,14 +561,6 @@
     <url>
         <loc>https://www.asjin.com/2020/09/17/python%E6%96%87%E4%BB%B6%E7%9A%84IO%E4%BA%8C/</loc>
         <lastmod>2021-04-18T03:19:10.452Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://www.asjin.com/2021/04/18/SGE+bash+awk+sed+Python+WebStackPage%E5%AE%9E%E7%8E%B0P%E7%BA%A7%E6%95%B0%E6%8D%AE%E5%B9%B6%E5%8F%91%E6%89%AB%E6%8F%8F%E4%B8%8E%E4%B8%8B%E6%9C%BA%E6%95%B0%E6%8D%AE%E6%8A%A5%E8%A1%A8%E5%85%AC%E7%A4%BA/</loc>
-        <lastmod>2021-04-18T03:18:43.263Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 

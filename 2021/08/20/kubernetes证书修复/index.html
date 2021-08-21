@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head hexo-theme='https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+  <title>复盘kubernetes证书到期故障状与集群快速恢复 - 逝水锦遥</title>
+  
+    <meta name="keywords" content="rhca,linux,cloud,故障处理">
+  
+
+  
+
+  <!-- feed -->
+  
+    <link rel="alternate" href="/atom.xml" title="逝水锦遥" type="application/atom+xml">
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  
+
+  <!-- import link -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/first.css">
+
+  
+
+  
+  <link rel="stylesheet" href="/css/style.css" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
+  
+
+  <script id="loadcss"></script>
+</head>
+
+
+<body>
+<!--
+	  <canvas id="canvas" width="1440" height="900" ></canvas>
+	  <script type="text/javascript" src="/js/DigitalRain.js"></script>
+-->  
+	  
+
+<header id="l_header" class="l_header always floatable "  >
+  <div class='container'>
+  <div id='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h m-phone' id="pjax-header-nav-list">
+        <li><a id="s-comment" class="fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a id="s-toc" class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+            <img no-lazy class='logo' src='/images/headasjin.png'/>
+          
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h m-pc'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fab fa-linux fa-fw'></i>首页
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/program
+                  
+                  
+                  
+                    id="tagsprogram"
+                  >
+                  <i class='fab fa-gitlab fa-fw'></i>DevOps
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/rhca
+                  
+                  
+                  
+                    id="tagsrhca"
+                  >
+                  <i class='fas fa-heartbeat fa-fw'></i>应用运维
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-cloud fa-fw'></i>云标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/zikao
+                  
+                  
+                  
+                    id="tagszikao"
+                  >
+                  <i class='fab fa-grav fa-fw'></i>报考
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-user-circle fa-fw'></i>关于锦遥
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" 
+                  
+                  
+                  >
+                  <i class='fas fa-ellipsis-v fa-fw'></i>更多
+                </a>
+                
+                  <ul class="list-v">
+                    
+                      
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/box/
+                  
+                  
+                  
+                    id="box"
+                  >
+                  <i class='fas fa-flag fa-fw'></i>工具箱
+                </a>
+                
+              </li>
+            
+          
+                    
+                  </ul>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="搜索文章..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h m-phone'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fab fa-linux fa-fw'></i>首页
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/program
+                  
+                  
+                  
+                    id="tagsprogram"
+                  >
+                  <i class='fab fa-gitlab fa-fw'></i>DevOps
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/rhca
+                  
+                  
+                  
+                    id="tagsrhca"
+                  >
+                  <i class='fas fa-heartbeat fa-fw'></i>应用运维
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-cloud fa-fw'></i>云标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/zikao
+                  
+                  
+                  
+                    id="tagszikao"
+                  >
+                  <i class='fab fa-grav fa-fw'></i>报考
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-user-circle fa-fw'></i>关于锦遥
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" 
+                  
+                  
+                  >
+                  <i class='fas fa-ellipsis-v fa-fw'></i>更多
+                </a>
+                
+                  <ul class="list-v">
+                    
+                      
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/box/
+                  
+                  
+                  
+                    id="box"
+                  >
+                  <i class='fas fa-flag fa-fw'></i>工具箱
+                </a>
+                
+              </li>
+            
+          
+                    
+                  </ul>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+  <div id="l_body">
+    <div id="l_cover">
+  
+    
+        <div id="half" class='cover-wrapper post dock' style="display: ;">
+          
+            <div id='cover-backstretch'></div>
+          
+          <div class='cover-body'>
+  <div class='top'>
+    
+      <img no-lazy class='logo' src='/images/ssjyai.png'/>
+    
+    
+    
+  </div>
+  <div class='bottom'>
+    <div class='menu navigation'>
+      <div class='list-h'>
+        
+          
+            <a href="/box/"
+              
+              
+              id="box">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/2694.svg'><p>工具</p>
+            </a>
+          
+            <a target="_blank" rel="noopener" href="https://www.magedu.com/"
+              
+              
+              id="https:wwwmageducom">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f5c3.svg'><p>马哥</p>
+            </a>
+          
+            <a href="/2021/04/09/zikao/%E6%8A%80%E6%9C%AF%E8%80%83%E8%AF%81/"
+              
+              
+              id="20210409zikaoE68A80E69CAFE88083E8AF81">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f396.svg'><p>考证</p>
+            </a>
+          
+            <a href="/friends/"
+              
+              
+              id="friends">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f389.svg'><p>友链</p>
+            </a>
+          
+            <a target="_blank" rel="noopener" href="https://cloud.asjin.com"
+              
+              
+              id="https:cloudasjincom">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f387.svg'><p>云盘</p>
+            </a>
+          
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+          <div id="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+        </div>
+    
+  
+  </div>
+
+    <div id='safearea'>
+      <div class='body-wrapper' id="pjax-container">
+        
+
+<div class='l_main'>
+  <article class="article post white-box reveal md floatable article-type-post" id="post" itemscope itemprop="blogPost">
+  
+
+
+  
+  <div class="article-meta" id="top">
+    
+    
+      <a title='复盘kubernetes证书到期故障状与集群快速恢复' href='/2021/08/20/kubernetes%E8%AF%81%E4%B9%A6%E4%BF%AE%E5%A4%8D/'>
+        <img class='thumbnail' src='/images/favicon/k8s-logo.png'>
+      </a>
+    
+    
+      <h1 class="title">
+        复盘kubernetes证书到期故障状与集群快速恢复
+      </h1>
+      <div class='new-meta-box'>
+        
+          
+            
+<div class='new-meta-item author'>
+  <a class='author' href="/images/rjrt.ico" rel="nofollow">
+    <img no-lazy src="/images/rjrt.ico">
+    <p>任锦</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class='new-meta-item category'>
+    <a class='notlink'>
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <a class="category-link" href="/categories/kubernetes%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0/">kubernetes系统学习</a>
+    </a>
+  </div>
+
+
+          
+        
+          
+            <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：Aug 20, 2021</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item browse busuanzi">
+    <a class='notlink'>
+      <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+      <p>
+        <span id="busuanzi_value_page_pv">
+          <i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i>
+          <i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i>
+        </span>
+        次浏览
+      </p>
+    </a>
+  </div>
+
+
+          
+        
+          
+        
+          
+            
+
+          
+        
+          
+        
+          
+        
+      </div>
+    
+  </div>
+
+
+  
+  <h1 id="k8s-证书修复与更新"><a href="#k8s-证书修复与更新" class="headerlink" title="k8s 证书修复与更新"></a>k8s 证书修复与更新</h1><p><img src="/images/kubernetes-openssl-cert.png" class="lazyload" data-srcset="/images/kubernetes-openssl-cert.png" srcset="data:image/png;base64,666" alt=""></p>
+<p>[toc]</p>
+<h1 id="复盘k8s证书到期故障状态，与集群快速恢复"><a href="#复盘k8s证书到期故障状态，与集群快速恢复" class="headerlink" title="复盘k8s证书到期故障状态，与集群快速恢复"></a>复盘k8s证书到期故障状态，与集群快速恢复</h1><p>在所有证有书更新之前，要确保kubelet-client-current.pem  这个证书自动更新的</p>
+<h2 id="kubelet-client-current-pem-特殊证书的更新"><a href="#kubelet-client-current-pem-特殊证书的更新" class="headerlink" title="kubelet-client-current.pem 特殊证书的更新"></a>kubelet-client-current.pem 特殊证书的更新</h2><h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p><strong>生产中kubebetes 不能随便调整时间，在操作的时候要注意，保持当前时间。</strong></p>
+<p>引入k8s1.15 - 1.18 的证书坑点，读取kubernetes 源码，可以发现 kubernetes  kubelet-client-current.pem kubelet 客户端证书的轮换机制</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/blob/v1.18.0/staging/src/k8s.io/client-go/util/certificate/certificate_manager.go#L557">https://github.com/kubernetes/kubernetes/blob/v1.18.0/staging/src/k8s.io/client-go/util/certificate/certificate_manager.go#L557</a></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// jitteryDuration uses some jitter to set the rotation threshold so each node</span></span><br><span class="line"><span class="comment">// will rotate at approximately 70-90% of the total lifetime of the</span></span><br><span class="line"><span class="comment">// certificate.  With jitter, if a number of nodes are added to a cluster at</span></span><br><span class="line"><span class="comment">// approximately the same time (such as cluster creation time), they won&#x27;t all</span></span><br><span class="line"><span class="comment">// try to rotate certificates at the same time for the rest of the life of the</span></span><br><span class="line"><span class="comment">// cluster.</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>在生产中要确保以下<code>/var/lib/kubelet/config.yaml</code>  <code>rotateCertificates: true</code>配置参数是开启的</strong> ，因为kubernetes kubelet-client-current.pem 这个证书有轮转机制，<strong>即每当这个证书到了即将到期的70%-90% 时间周期时</strong>，kubelet  客户端会向  kube-controller-manager-k8s-master 发启更新请求。那么意味着这个证书不能超过它自身期限的90%，而在<strong>生产环境，默认改启以下参数，会自动更新，即除master1 ，kubelet-client-current.pem证书按正常时间推进默认不需要人为介入更新 </strong></p>
+</li>
+<li><p>master init 的节点会随着手动证书更新重启kubelet，kubelect client 证书也随着触发更新，而其它master ,node 这些join的节点 kubelet client 证书自动更新</p>
+</li>
+<li>生产中兜底方案，在当前时间到kubelet-client 证书有效期周期的 70% - 90% 范围时，<strong>调整生成证书年限为9年 </strong>  重启kubelet  触发kubelet client 证书为9年后，再更新其它证书 </li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /var/lib/kubelet/config.yaml</span><br><span class="line">rotateCertificates: <span class="literal">true</span> <span class="comment">## 确保轮换机制开启</span></span><br></pre></td></tr></table></figure>
+<h3 id="操作-模拟故障复盘"><a href="#操作-模拟故障复盘" class="headerlink" title="操作: 模拟故障复盘"></a>操作: 模拟故障复盘</h3><h4 id="三个-master-证书-变更配置"><a href="#三个-master-证书-变更配置" class="headerlink" title="三个 master 证书 变更配置"></a>三个 master 证书 变更配置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/kubernetes/manifests/kube-controller-manager.yaml</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - <span class="built_in">command</span>:</span><br><span class="line">    - kube-controller-manager</span><br><span class="line">    - --experimental-cluster-signing-duration=87600h0m0s <span class="comment">## 新增内容</span></span><br><span class="line">    - --feature-gates=RotateKubeletServerCertificate=<span class="literal">true</span> <span class="comment">## 新增内容</span></span><br></pre></td></tr></table></figure>
+<h4 id="逐个重启-controller"><a href="#逐个重启-controller" class="headerlink" title="逐个重启  controller"></a>逐个重启  controller</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete pod kube-controller-manager-k8s-master1 -n kube-system</span><br><span class="line">kubectl delete pod kube-controller-manager-k8s-master2 -n kube-system</span><br><span class="line">kubectl delete pod kube-controller-manager-k8s-master3 -n kube-system</span><br></pre></td></tr></table></figure>
+<h4 id="时间调整到证书到期的70-90-之间"><a href="#时间调整到证书到期的70-90-之间" class="headerlink" title="时间调整到证书到期的70-90% 之间"></a>时间调整到证书到期的70-90% 之间</h4><p>master1  master2 master3 node1 执行 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">date -s <span class="string">&quot;2022-05-20&quot;</span></span><br></pre></td></tr></table></figure>
+<h4 id="重启kubelet-获取证书"><a href="#重启kubelet-获取证书" class="headerlink" title="重启kubelet 获取证书"></a>重启kubelet 获取证书</h4><p>master1 master2 master3 node1 执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart kubelet</span><br></pre></td></tr></table></figure>
+<h4 id="验证kubelet-期后是否有效"><a href="#验证kubelet-期后是否有效" class="headerlink" title="验证kubelet 期后是否有效"></a>验证kubelet 期后是否有效</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -<span class="keyword">in</span> /var/lib/kubelet/pki/kubelet-client-current.pem -noout -dates</span><br><span class="line">notBefore=May 19 15:57:00 2022 GMT</span><br><span class="line">notAfter=Aug 10 14:35:09 2031 GMT</span><br></pre></td></tr></table></figure>
+<h4 id="更改系统时间超前复现故障"><a href="#更改系统时间超前复现故障" class="headerlink" title="更改系统时间超前复现故障"></a>更改系统时间超前复现故障</h4><p>三个master节点</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">date -s <span class="string">&quot;2027-05-20&quot;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>至次模拟出复盘故障</strong></p>
+</li>
+<li><p><strong>以下操作开始恢复集群</strong></p>
+</li>
+</ul>
+<h3 id="操作快速恢复"><a href="#操作快速恢复" class="headerlink" title="操作快速恢复"></a>操作快速恢复</h3><h3 id="update-kubeadm-cert-sh-更新三个master-证书"><a href="#update-kubeadm-cert-sh-更新三个master-证书" class="headerlink" title="update-kubeadm-cert.sh 更新三个master 证书"></a>update-kubeadm-cert.sh 更新三个master 证书</h3><h4 id="将证书年限调整到-3285-即-9年"><a href="#将证书年限调整到-3285-即-9年" class="headerlink" title="将证书年限调整到 3285 即 9年"></a>将证书年限调整到 3285 即 9年</h4><p>三个master均需执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CAER_DAYS=3285 <span class="comment">## 更改日期到9年</span></span><br><span class="line">./update-kubeadm-cert.sh all <span class="comment">## 更新证书</span></span><br></pre></td></tr></table></figure>
+<p><strong>api-server 启动后，个别服务显示running 但不影响,尝试重启docker 与kubelet</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vim clean.sh</span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"> docker rm $(sudo docker ps -qf status=exited)</span><br><span class="line"> systemctl restart docker </span><br><span class="line"> systemctl restart kubelet </span><br><span class="line"> docker rm $(sudo docker ps -qf status=exited)</span><br><span class="line">chmod +x clean.sh </span><br><span class="line">bash clean.sh</span><br></pre></td></tr></table></figure>
+<p><strong>不响应的组件，可以尝试清理让其再次自动修复</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `kubectl get pod -A -o wide | grep master3 | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span>` ; <span class="keyword">do</span> kubectl delete pod <span class="variable">$i</span> -n kube-system  ;<span class="keyword">done</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `kubectl get pod -A -o wide | grep master2 | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span>` ; <span class="keyword">do</span> kubectl delete pod <span class="variable">$i</span> -n kube-system  ;<span class="keyword">done</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `kubectl get pod -A -o wide | grep master1 | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span>` ; <span class="keyword">do</span> kubectl delete pod <span class="variable">$i</span> -n kube-system  ;<span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>三个master恢复后，正常<code>docker ps</code> 可以统计到至少14个 pod </p>
+<p><strong>为防止k8s 组件etcd  飘到master</strong> 启动不了, 可以每个node 保留一份k8s 组件镜像，并打标存放，若是<strong>非故障更新证书</strong>，<strong>一定要提前在每个node 上pull k8s master节点相关组件，避免coredns 飘到node 启动不了造成故障</strong>;</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">############下载镜像</span></span><br><span class="line">docker pull registry.aliyuncs.com/google_containers/kube-apiserver:v1.15.0</span><br><span class="line">docker pull registry.aliyuncs.com/google_containers/kube-controller-manager:v1.15.0</span><br><span class="line">docker pull registry.aliyuncs.com/google_containers/kube-scheduler:v1.15.0</span><br><span class="line">docker pull registry.aliyuncs.com/google_containers/kube-proxy:v1.15.0</span><br><span class="line">docker pull registry.aliyuncs.com/google_containers/pause:3.1</span><br><span class="line">docker pull registry.aliyuncs.com/google_containers/etcd:3.3.10</span><br><span class="line">docker pull registry.aliyuncs.com/google_containers/coredns:1.3.1</span><br><span class="line"><span class="comment">############给镜像打一个新的tag</span></span><br><span class="line">docker tag registry.aliyuncs.com/google_containers/kube-apiserver:v1.15.0 k8s.gcr.io/kube-apiserver:v1.15.0</span><br><span class="line">docker tag registry.aliyuncs.com/google_containers/kube-controller-manager:v1.15.0 k8s.gcr.io/kube-controller-manager:v1.15.0</span><br><span class="line">docker tag registry.aliyuncs.com/google_containers/kube-scheduler:v1.15.0 k8s.gcr.io/kube-scheduler:v1.15.0</span><br><span class="line">docker tag registry.aliyuncs.com/google_containers/kube-proxy:v1.15.0 k8s.gcr.io/kube-proxy:v1.15.0</span><br><span class="line">docker tag registry.aliyuncs.com/google_containers/pause:3.1 k8s.gcr.io/pause:3.1</span><br><span class="line">docker tag registry.aliyuncs.com/google_containers/etcd:3.3.10 k8s.gcr.io/etcd:3.3.10</span><br><span class="line">docker tag registry.aliyuncs.com/google_containers/coredns:1.3.1 k8s.gcr.io/coredns:1.3.1</span><br><span class="line"><span class="comment">#############删除之前的镜像</span></span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/kube-apiserver:v1.15.0</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/kube-controller-manager:v1.15.0</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/kube-scheduler:v1.15.0</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/kube-proxy:v1.15.0</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/pause:3.1</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/etcd:3.3.10</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/coredns:1.3.1</span><br><span class="line">docker images</span><br></pre></td></tr></table></figure>
+<h4 id="验证证书所有master-证书与服务响应"><a href="#验证证书所有master-证书与服务响应" class="headerlink" title="验证证书所有master 证书与服务响应"></a>验证证书所有master 证书与服务响应</h4><p>服务响应的验证要包涵在node 与 master 在内\</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># date</span></span><br><span class="line">Thu May 20 01:50:42 HKT 2027</span><br><span class="line"><span class="comment"># kubeadm alpha certs check-expiration</span></span><br><span class="line">CERTIFICATE                EXPIRES                  RESIDUAL TIME   EXTERNALLY MANAGED</span><br><span class="line">admin.conf                 Dec 16, 2032 16:29 UTC   5y              no      </span><br><span class="line">apiserver                  Dec 16, 2032 16:29 UTC   5y              no      </span><br><span class="line">apiserver-etcd-client      Dec 16, 2032 16:29 UTC   5y              no      </span><br><span class="line">apiserver-kubelet-client   Dec 16, 2032 16:29 UTC   5y              no      </span><br><span class="line">controller-manager.conf    Dec 16, 2032 16:29 UTC   5y              no      </span><br><span class="line">etcd-healthcheck-client    Dec 16, 2032 16:29 UTC   5y              no      </span><br><span class="line">etcd-peer                  Dec 16, 2032 16:29 UTC   5y              no      </span><br><span class="line">etcd-server                Dec 16, 2032 16:29 UTC   5y              no      </span><br><span class="line">front-proxy-client         Dec 16, 2032 16:29 UTC   5y              no      </span><br><span class="line">scheduler.conf             Dec 16, 2032 16:29 UTC   5y              no  </span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># curl -s 127.0.0.1:31404 | grep &#x27;test&#x27;</span></span><br><span class="line">            &lt;dd&gt;&lt;a href=<span class="string">&quot;http://www.ssjinyao.com/test&quot;</span>&gt;Test Page&lt;span&gt;&amp;gt;&amp;gt;&lt;/span&gt;&lt;/a&gt;&lt;/dd&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="针对未故障状态证书到期续期"><a href="#针对未故障状态证书到期续期" class="headerlink" title="针对未故障状态证书到期续期"></a>针对未故障状态证书到期续期</h1><h2 id="官方一年一续"><a href="#官方一年一续" class="headerlink" title="官方一年一续"></a>官方一年一续</h2><ul>
+<li>三个master逐步执行</li>
+</ul>
+<ul>
+<li>备份config  etcd kuberntes 配置</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mv <span class="variable">$HOME</span>/.kube/config <span class="variable">$HOME</span>/.kube/config-`date +<span class="string">&quot;%Y-%m-%d-%H-%M-%S&quot;</span>`</span><br><span class="line">cp -a /var/lib/etcd /var/lib/etcd-`date +<span class="string">&quot;%Y-%m-%d-%H-%M-%S&quot;</span>`</span><br><span class="line">cp -a /etc/kubernetes /etc/kubernetes-`date +<span class="string">&quot;%Y-%m-%d-%H-%M-%S&quot;</span>`</span><br></pre></td></tr></table></figure>
+<ul>
+<li>master 和node 都pull 并 tag 一份k8s组件，避免coredns 飘到node启不来 </li>
+<li>重新生成证书</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubeadm alpha certs renew all --config=kubeadm.yaml</span><br><span class="line">kubeadm init phase kubeconfig all --config kubeadm.yaml</span><br><span class="line">systemctl restart kubelet</span><br></pre></td></tr></table></figure>
+<ul>
+<li>重启相关组件</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># docker ps | awk &#x27;/k8s_kube-apiserver/&#123;print$1&#125;&#x27; | xargs -r -I &#x27;&#123;&#125;&#x27; docker restart &#123;&#125; || true</span></span><br><span class="line"><span class="comment"># docker ps | awk &#x27;/k8s_kube-controller-manager/&#123;print$1&#125;&#x27; | xargs -r -I &#x27;&#123;&#125;&#x27; docker restart &#123;&#125; || true</span></span><br><span class="line"><span class="comment"># docker ps | awk &#x27;/k8s_kube-scheduler/&#123;print$1&#125;&#x27; | xargs -r -I &#x27;&#123;&#125;&#x27; docker restart &#123;&#125; || true</span></span><br><span class="line"><span class="comment"># docker ps | awk &#x27;/k8s_etcd/&#123;print$1&#125;&#x27; | xargs -r -I &#x27;&#123;&#125;&#x27; docker restart &#123;&#125; || true</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>更新admin config </li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span></span><br><span class="line"><span class="comment"># chown $(id -u):$(id -g) $HOME/.kube/config</span></span><br></pre></td></tr></table></figure>
+<h2 id="脚本方式"><a href="#脚本方式" class="headerlink" title="脚本方式"></a>脚本方式</h2><h3 id="三个-master-证书-变更配置-1"><a href="#三个-master-证书-变更配置-1" class="headerlink" title="三个 master 证书 变更配置"></a>三个 master 证书 变更配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/kubernetes/manifests/kube-controller-manager.yaml</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - <span class="built_in">command</span>:</span><br><span class="line">    - kube-controller-manager</span><br><span class="line">    - --experimental-cluster-signing-duration=87600h0m0s <span class="comment">## 新增内容</span></span><br><span class="line">    - --feature-gates=RotateKubeletServerCertificate=<span class="literal">true</span> <span class="comment">## 新增内容</span></span><br></pre></td></tr></table></figure>
+<h3 id="逐个重启-controller-1"><a href="#逐个重启-controller-1" class="headerlink" title="逐个重启  controller"></a>逐个重启  controller</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete pod kube-controller-manager-k8s-master1 -n kube-system</span><br><span class="line">kubectl delete pod kube-controller-manager-k8s-master2 -n kube-system</span><br><span class="line">kubectl delete pod kube-controller-manager-k8s-master3 -n kube-system</span><br></pre></td></tr></table></figure>
+<h3 id="master-和-node-重启kuebet-主动更新kuebelet-client-证书到十年"><a href="#master-和-node-重启kuebet-主动更新kuebelet-client-证书到十年" class="headerlink" title="master 和 node 重启kuebet 主动更新kuebelet client 证书到十年"></a>master 和 node 重启kuebet 主动更新kuebelet client 证书到十年</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart kubelet </span><br><span class="line"><span class="comment"># 重启后没有生成   systemctl stop kubelet </span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>三个master 逐步执行</li>
+</ul>
+<ul>
+<li>备份config  etcd kuberntes 配置</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mv <span class="variable">$HOME</span>/.kube/config <span class="variable">$HOME</span>/.kube/config-`date +<span class="string">&quot;%Y-%m-%d-%H-%M-%S&quot;</span>`</span><br><span class="line">cp -a /var/lib/etcd /var/lib/etcd-`date +<span class="string">&quot;%Y-%m-%d-%H-%M-%S&quot;</span>`</span><br><span class="line">cp -a /etc/kubernetes /etc/kubernetes-`date +<span class="string">&quot;%Y-%m-%d-%H-%M-%S&quot;</span>`</span><br></pre></td></tr></table></figure>
+<h3 id="将证书年限调整到-3285-即-9年-1"><a href="#将证书年限调整到-3285-即-9年-1" class="headerlink" title="将证书年限调整到 3285 即 9年"></a>将证书年限调整到 3285 即 9年</h3><ol start="4">
+<li><p>证书更新五年期限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim update-kubeadm-cert.sh</span><br><span class="line"><span class="comment">#修改CAER_DAYS 变量为即为9年</span></span><br><span class="line">3285</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>逐步一台台master的执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./update-kubeadm-cert.sh all</span><br><span class="line">kubeadm alpha certs check-expiration <span class="comment"># 查看当前证书时间</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h1><h3 id="打标签"><a href="#打标签" class="headerlink" title="打标签"></a>打标签</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl label nodes node13 role=code <span class="comment">## 打标签 </span></span><br><span class="line">kubectl  get node --show-labels <span class="comment">## 查看标签</span></span><br></pre></td></tr></table></figure>
+<h3 id="查看证书到期时间"><a href="#查看证书到期时间" class="headerlink" title="查看证书到期时间"></a>查看证书到期时间</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm alpha certs check-expiration</span><br></pre></td></tr></table></figure>
+<h3 id="image-pull-Error报错"><a href="#image-pull-Error报错" class="headerlink" title="image pull Error报错"></a>image pull Error报错</h3><p>部分因为pod 占用的名称一样，导致k8s组件启不来</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm $(docker ps -a | grep Exited| awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span>) </span><br></pre></td></tr></table></figure>
+<h3 id="kubernetes组件调到node时"><a href="#kubernetes组件调到node时" class="headerlink" title="kubernetes组件调到node时"></a>kubernetes组件调到node时</h3><ul>
+<li>本地没有kubernetes组件镜像时会启不来，最好Node节点下本地pull 一份k8s的组件</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">############下载镜像</span></span><br><span class="line">docker pull registry.aliyuncs.com/google_containers/kube-apiserver:v1.15.0</span><br><span class="line">docker pull registry.aliyuncs.com/google_containers/kube-controller-manager:v1.15.0</span><br><span class="line">docker pull registry.aliyuncs.com/google_containers/kube-scheduler:v1.15.0</span><br><span class="line">docker pull registry.aliyuncs.com/google_containers/kube-proxy:v1.15.0</span><br><span class="line">docker pull registry.aliyuncs.com/google_containers/pause:3.1</span><br><span class="line">docker pull registry.aliyuncs.com/google_containers/etcd:3.3.10</span><br><span class="line">docker pull registry.aliyuncs.com/google_containers/coredns:1.3.1</span><br><span class="line"><span class="comment">############给镜像打一个新的tag</span></span><br><span class="line">docker tag registry.aliyuncs.com/google_containers/kube-apiserver:v1.15.0 k8s.gcr.io/kube-apiserver:v1.15.0</span><br><span class="line">docker tag registry.aliyuncs.com/google_containers/kube-controller-manager:v1.15.0 k8s.gcr.io/kube-controller-manager:v1.15.0</span><br><span class="line">docker tag registry.aliyuncs.com/google_containers/kube-scheduler:v1.15.0 k8s.gcr.io/kube-scheduler:v1.15.0</span><br><span class="line">docker tag registry.aliyuncs.com/google_containers/kube-proxy:v1.15.0 k8s.gcr.io/kube-proxy:v1.15.0</span><br><span class="line">docker tag registry.aliyuncs.com/google_containers/pause:3.1 k8s.gcr.io/pause:3.1</span><br><span class="line">docker tag registry.aliyuncs.com/google_containers/etcd:3.3.10 k8s.gcr.io/etcd:3.3.10</span><br><span class="line">docker tag registry.aliyuncs.com/google_containers/coredns:1.3.1 k8s.gcr.io/coredns:1.3.1</span><br><span class="line"><span class="comment">#############删除之前的镜像</span></span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/kube-apiserver:v1.15.0</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/kube-controller-manager:v1.15.0</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/kube-scheduler:v1.15.0</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/kube-proxy:v1.15.0</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/pause:3.1</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/etcd:3.3.10</span><br><span class="line">docker rmi registry.aliyuncs.com/google_containers/coredns:1.3.1</span><br><span class="line">docker images</span><br></pre></td></tr></table></figure>
+<h3 id="查看根证书的时间年限"><a href="#查看根证书的时间年限" class="headerlink" title="查看根证书的时间年限"></a>查看根证书的时间年限</h3><p><strong>一定要注意，根证书到期的话，多个master的证书都得换 ，有业务的的重要集群，最好是做好迁移</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -<span class="keyword">in</span> front-proxy-ca.crt -text -noout</span><br><span class="line">openssl x509 -<span class="keyword">in</span> ca.crt -text -noout</span><br><span class="line"><span class="built_in">cd</span> etcd &amp;&amp; openssl x509 -<span class="keyword">in</span> ca.crt -text -noout</span><br></pre></td></tr></table></figure>
+<h3 id="附-证书更新脚本"><a href="#附-证书更新脚本" class="headerlink" title="附: 证书更新脚本"></a>附: 证书更新脚本</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">set</span> -o errexit</span><br><span class="line"><span class="built_in">set</span> -o pipefail</span><br><span class="line"><span class="comment"># set -o xtrace</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">log</span>::<span class="function"><span class="title">err</span></span>() &#123;</span><br><span class="line">  <span class="built_in">printf</span> <span class="string">&quot;[<span class="subst">$(date +&#x27;%Y-%m-%dT%H:%M:%S.%N%z&#x27;)</span>]: \033[31mERROR: \033[0m<span class="variable">$@</span>\n&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">log</span>::<span class="function"><span class="title">info</span></span>() &#123;</span><br><span class="line">  <span class="built_in">printf</span> <span class="string">&quot;[<span class="subst">$(date +&#x27;%Y-%m-%dT%H:%M:%S.%N%z&#x27;)</span>]: \033[32mINFO: \033[0m<span class="variable">$@</span>\n&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">log</span>::<span class="function"><span class="title">warning</span></span>() &#123;</span><br><span class="line">  <span class="built_in">printf</span> <span class="string">&quot;[<span class="subst">$(date +&#x27;%Y-%m-%dT%H:%M:%S.%N%z&#x27;)</span>]: \033[33mWARNING: \033[0m<span class="variable">$@</span>\n&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">check_file</span></span>() &#123;</span><br><span class="line">  <span class="keyword">if</span> [[ ! -r  <span class="variable">$&#123;1&#125;</span> ]]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">log</span>::err <span class="string">&quot;can not find <span class="variable">$&#123;1&#125;</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># get x509v3 subject alternative name from the old certificate</span></span><br><span class="line">cert::<span class="function"><span class="title">get_subject_alt_name</span></span>() &#123;</span><br><span class="line">  <span class="built_in">local</span> cert=<span class="variable">$&#123;1&#125;</span>.crt</span><br><span class="line">  check_file <span class="string">&quot;<span class="variable">$&#123;cert&#125;</span>&quot;</span></span><br><span class="line">  <span class="built_in">local</span> alt_name=$(openssl x509 -text -noout -<span class="keyword">in</span> <span class="variable">$&#123;cert&#125;</span> | grep -A1 <span class="string">&#x27;Alternative&#x27;</span> | tail -n1 | sed <span class="string">&#x27;s/[[:space:]]*Address//g&#x27;</span>)</span><br><span class="line">  <span class="built_in">printf</span> <span class="string">&quot;<span class="variable">$&#123;alt_name&#125;</span>\n&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># get subject from the old certificate</span></span><br><span class="line">cert::<span class="function"><span class="title">get_subj</span></span>() &#123;</span><br><span class="line">  <span class="built_in">local</span> cert=<span class="variable">$&#123;1&#125;</span>.crt</span><br><span class="line">  check_file <span class="string">&quot;<span class="variable">$&#123;cert&#125;</span>&quot;</span></span><br><span class="line">  <span class="built_in">local</span> subj=$(openssl x509 -text -noout -<span class="keyword">in</span> <span class="variable">$&#123;cert&#125;</span>  | grep <span class="string">&quot;Subject:&quot;</span> | sed <span class="string">&#x27;s/Subject:/\//g;s/\,/\//;s/[[:space:]]//g&#x27;</span>)</span><br><span class="line">  <span class="built_in">printf</span> <span class="string">&quot;<span class="variable">$&#123;subj&#125;</span>\n&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">cert::<span class="function"><span class="title">backup_file</span></span>() &#123;</span><br><span class="line">  <span class="built_in">local</span> file=<span class="variable">$&#123;1&#125;</span></span><br><span class="line">  <span class="keyword">if</span> [[ ! -e <span class="variable">$&#123;file&#125;</span>.old-$(date +%Y%m%d) ]]; <span class="keyword">then</span></span><br><span class="line">    cp -rp <span class="variable">$&#123;file&#125;</span> <span class="variable">$&#123;file&#125;</span>.old-$(date +%Y%m%d)</span><br><span class="line">    <span class="built_in">log</span>::info <span class="string">&quot;backup <span class="variable">$&#123;file&#125;</span> to <span class="variable">$&#123;file&#125;</span>.old-<span class="subst">$(date +%Y%m%d)</span>&quot;</span></span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">log</span>::warning <span class="string">&quot;does not backup, <span class="variable">$&#123;file&#125;</span>.old-<span class="subst">$(date +%Y%m%d)</span> already exists&quot;</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># generate certificate whit client, server or peer</span></span><br><span class="line"><span class="comment"># Args:</span></span><br><span class="line"><span class="comment">#   $1 (the name of certificate)</span></span><br><span class="line"><span class="comment">#   $2 (the type of certificate, must be one of client, server, peer)</span></span><br><span class="line"><span class="comment">#   $3 (the subject of certificates)</span></span><br><span class="line"><span class="comment">#   $4 (the validity of certificates) (days)</span></span><br><span class="line"><span class="comment">#   $5 (the x509v3 subject alternative name of certificate when the type of certificate is server or peer)</span></span><br><span class="line">cert::<span class="function"><span class="title">gen_cert</span></span>() &#123;</span><br><span class="line">  <span class="built_in">local</span> cert_name=<span class="variable">$&#123;1&#125;</span></span><br><span class="line">  <span class="built_in">local</span> cert_type=<span class="variable">$&#123;2&#125;</span></span><br><span class="line">  <span class="built_in">local</span> subj=<span class="variable">$&#123;3&#125;</span></span><br><span class="line">  <span class="built_in">local</span> cert_days=<span class="variable">$&#123;4&#125;</span></span><br><span class="line">  <span class="built_in">local</span> alt_name=<span class="variable">$&#123;5&#125;</span></span><br><span class="line">  <span class="built_in">local</span> cert=<span class="variable">$&#123;cert_name&#125;</span>.crt</span><br><span class="line">  <span class="built_in">local</span> key=<span class="variable">$&#123;cert_name&#125;</span>.key</span><br><span class="line">  <span class="built_in">local</span> csr=<span class="variable">$&#123;cert_name&#125;</span>.csr</span><br><span class="line">  <span class="built_in">local</span> csr_conf=<span class="string">&quot;distinguished_name = dn\n[dn]\n[v3_ext]\nkeyUsage = critical, digitalSignature, keyEncipherment\n&quot;</span></span><br><span class="line"></span><br><span class="line">  check_file <span class="string">&quot;<span class="variable">$&#123;key&#125;</span>&quot;</span></span><br><span class="line">  check_file <span class="string">&quot;<span class="variable">$&#123;cert&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># backup certificate when certificate not in $&#123;kubeconf_arr[@]&#125;</span></span><br><span class="line">  <span class="comment"># kubeconf_arr=(&quot;controller-manager.crt&quot; &quot;scheduler.crt&quot; &quot;admin.crt&quot; &quot;kubelet.crt&quot;)</span></span><br><span class="line">  <span class="comment"># if [[ ! &quot;$&#123;kubeconf_arr[@]&#125;&quot; =~ &quot;$&#123;cert##*/&#125;&quot; ]]; then</span></span><br><span class="line">  <span class="comment">#   cert::backup_file &quot;$&#123;cert&#125;&quot;</span></span><br><span class="line">  <span class="comment"># fi</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> <span class="string">&quot;<span class="variable">$&#123;cert_type&#125;</span>&quot;</span> <span class="keyword">in</span></span><br><span class="line">    client)</span><br><span class="line">      openssl req -new  -key <span class="variable">$&#123;key&#125;</span> -subj <span class="string">&quot;<span class="variable">$&#123;subj&#125;</span>&quot;</span> -reqexts v3_ext \</span><br><span class="line">        -config &lt;(<span class="built_in">printf</span> <span class="string">&quot;<span class="variable">$&#123;csr_conf&#125;</span> extendedKeyUsage = clientAuth\n&quot;</span>) -out <span class="variable">$&#123;csr&#125;</span></span><br><span class="line">      openssl x509 -<span class="keyword">in</span> <span class="variable">$&#123;csr&#125;</span> -req -CA <span class="variable">$&#123;CA_CERT&#125;</span> -CAkey <span class="variable">$&#123;CA_KEY&#125;</span> -CAcreateserial -extensions v3_ext \</span><br><span class="line">        -extfile &lt;(<span class="built_in">printf</span> <span class="string">&quot;<span class="variable">$&#123;csr_conf&#125;</span> extendedKeyUsage = clientAuth\n&quot;</span>) -days <span class="variable">$&#123;cert_days&#125;</span> -out <span class="variable">$&#123;cert&#125;</span></span><br><span class="line">      <span class="built_in">log</span>::info <span class="string">&quot;generated <span class="variable">$&#123;cert&#125;</span>&quot;</span></span><br><span class="line">    ;;</span><br><span class="line">    server)</span><br><span class="line">      openssl req -new  -key <span class="variable">$&#123;key&#125;</span> -subj <span class="string">&quot;<span class="variable">$&#123;subj&#125;</span>&quot;</span> -reqexts v3_ext \</span><br><span class="line">        -config &lt;(<span class="built_in">printf</span> <span class="string">&quot;<span class="variable">$&#123;csr_conf&#125;</span> extendedKeyUsage = serverAuth\nsubjectAltName = <span class="variable">$&#123;alt_name&#125;</span>\n&quot;</span>) -out <span class="variable">$&#123;csr&#125;</span></span><br><span class="line">      openssl x509 -<span class="keyword">in</span> <span class="variable">$&#123;csr&#125;</span> -req -CA <span class="variable">$&#123;CA_CERT&#125;</span> -CAkey <span class="variable">$&#123;CA_KEY&#125;</span> -CAcreateserial -extensions v3_ext \</span><br><span class="line">        -extfile &lt;(<span class="built_in">printf</span> <span class="string">&quot;<span class="variable">$&#123;csr_conf&#125;</span> extendedKeyUsage = serverAuth\nsubjectAltName = <span class="variable">$&#123;alt_name&#125;</span>\n&quot;</span>) -days <span class="variable">$&#123;cert_days&#125;</span> -out <span class="variable">$&#123;cert&#125;</span></span><br><span class="line">      <span class="built_in">log</span>::info <span class="string">&quot;generated <span class="variable">$&#123;cert&#125;</span>&quot;</span></span><br><span class="line">    ;;</span><br><span class="line">    peer)</span><br><span class="line">      openssl req -new  -key <span class="variable">$&#123;key&#125;</span> -subj <span class="string">&quot;<span class="variable">$&#123;subj&#125;</span>&quot;</span> -reqexts v3_ext \</span><br><span class="line">        -config &lt;(<span class="built_in">printf</span> <span class="string">&quot;<span class="variable">$&#123;csr_conf&#125;</span> extendedKeyUsage = serverAuth, clientAuth\nsubjectAltName = <span class="variable">$&#123;alt_name&#125;</span>\n&quot;</span>) -out <span class="variable">$&#123;csr&#125;</span></span><br><span class="line">      openssl x509 -<span class="keyword">in</span> <span class="variable">$&#123;csr&#125;</span> -req -CA <span class="variable">$&#123;CA_CERT&#125;</span> -CAkey <span class="variable">$&#123;CA_KEY&#125;</span> -CAcreateserial -extensions v3_ext \</span><br><span class="line">        -extfile &lt;(<span class="built_in">printf</span> <span class="string">&quot;<span class="variable">$&#123;csr_conf&#125;</span> extendedKeyUsage = serverAuth, clientAuth\nsubjectAltName = <span class="variable">$&#123;alt_name&#125;</span>\n&quot;</span>) -days <span class="variable">$&#123;cert_days&#125;</span> -out <span class="variable">$&#123;cert&#125;</span></span><br><span class="line">      <span class="built_in">log</span>::info <span class="string">&quot;generated <span class="variable">$&#123;cert&#125;</span>&quot;</span></span><br><span class="line">    ;;</span><br><span class="line">    *)</span><br><span class="line">      <span class="built_in">log</span>::err <span class="string">&quot;unknow, unsupported etcd certs type: <span class="variable">$&#123;cert_type&#125;</span>, supported type: client, server, peer&quot;</span></span><br><span class="line">      <span class="built_in">exit</span> 1</span><br><span class="line">  <span class="keyword">esac</span></span><br><span class="line"></span><br><span class="line">  rm -f <span class="variable">$&#123;csr&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">cert::<span class="function"><span class="title">update_kubeconf</span></span>() &#123;</span><br><span class="line">  <span class="built_in">local</span> cert_name=<span class="variable">$&#123;1&#125;</span></span><br><span class="line">  <span class="built_in">local</span> kubeconf_file=<span class="variable">$&#123;cert_name&#125;</span>.conf</span><br><span class="line">  <span class="built_in">local</span> cert=<span class="variable">$&#123;cert_name&#125;</span>.crt</span><br><span class="line">  <span class="built_in">local</span> key=<span class="variable">$&#123;cert_name&#125;</span>.key</span><br><span class="line"></span><br><span class="line">  <span class="comment"># generate  certificate</span></span><br><span class="line">  check_file <span class="variable">$&#123;kubeconf_file&#125;</span></span><br><span class="line">  <span class="comment"># get the key from the old kubeconf</span></span><br><span class="line">  grep <span class="string">&quot;client-key-data&quot;</span> <span class="variable">$&#123;kubeconf_file&#125;</span> | awk &#123;<span class="string">&#x27;print$2&#x27;</span>&#125; | base64 -d &gt; <span class="variable">$&#123;key&#125;</span></span><br><span class="line">  <span class="comment"># get the old certificate from the old kubeconf</span></span><br><span class="line">  grep <span class="string">&quot;client-certificate-data&quot;</span> <span class="variable">$&#123;kubeconf_file&#125;</span> | awk &#123;<span class="string">&#x27;print$2&#x27;</span>&#125; | base64 -d &gt; <span class="variable">$&#123;cert&#125;</span></span><br><span class="line">  <span class="comment"># get subject from the old certificate</span></span><br><span class="line">  <span class="built_in">local</span> subj=$(cert::get_subj <span class="variable">$&#123;cert_name&#125;</span>)</span><br><span class="line">  cert::gen_cert <span class="string">&quot;<span class="variable">$&#123;cert_name&#125;</span>&quot;</span> <span class="string">&quot;client&quot;</span> <span class="string">&quot;<span class="variable">$&#123;subj&#125;</span>&quot;</span> <span class="string">&quot;<span class="variable">$&#123;CAER_DAYS&#125;</span>&quot;</span></span><br><span class="line">  <span class="comment"># get certificate base64 code</span></span><br><span class="line">  <span class="built_in">local</span> cert_base64=$(base64 -w 0 <span class="variable">$&#123;cert&#125;</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment"># backup kubeconf</span></span><br><span class="line">  <span class="comment"># cert::backup_file &quot;$&#123;kubeconf_file&#125;&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># set certificate base64 code to kubeconf</span></span><br><span class="line">  sed -i <span class="string">&#x27;s/client-certificate-data:.*/client-certificate-data: &#x27;</span><span class="variable">$&#123;cert_base64&#125;</span><span class="string">&#x27;/g&#x27;</span> <span class="variable">$&#123;kubeconf_file&#125;</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">log</span>::info <span class="string">&quot;generated new <span class="variable">$&#123;kubeconf_file&#125;</span>&quot;</span></span><br><span class="line">  rm -f <span class="variable">$&#123;cert&#125;</span></span><br><span class="line">  rm -f <span class="variable">$&#123;key&#125;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># set config for kubectl</span></span><br><span class="line">  <span class="keyword">if</span> [[ <span class="variable">$&#123;cert_name##*/&#125;</span> == <span class="string">&quot;admin&quot;</span> ]]; <span class="keyword">then</span></span><br><span class="line">    mkdir -p <span class="variable">$&#123;HOME&#125;</span>/.kube</span><br><span class="line">    <span class="built_in">local</span> config=<span class="variable">$&#123;HOME&#125;</span>/.kube/config</span><br><span class="line">    <span class="built_in">local</span> config_backup=<span class="variable">$&#123;HOME&#125;</span>/.kube/config.old-$(date +%Y%m%d)</span><br><span class="line">    <span class="keyword">if</span> [[ -f <span class="variable">$&#123;config&#125;</span> ]] &amp;&amp; [[ ! -f <span class="variable">$&#123;config_backup&#125;</span> ]]; <span class="keyword">then</span></span><br><span class="line">      cp -fp <span class="variable">$&#123;config&#125;</span> <span class="variable">$&#123;config_backup&#125;</span></span><br><span class="line">      <span class="built_in">log</span>::info <span class="string">&quot;backup <span class="variable">$&#123;config&#125;</span> to <span class="variable">$&#123;config_backup&#125;</span>&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    cp -fp <span class="variable">$&#123;kubeconf_file&#125;</span> <span class="variable">$&#123;HOME&#125;</span>/.kube/config</span><br><span class="line">    <span class="built_in">log</span>::info <span class="string">&quot;copy the admin.conf to <span class="variable">$&#123;HOME&#125;</span>/.kube/config for kubectl&quot;</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">cert::<span class="function"><span class="title">update_etcd_cert</span></span>() &#123;</span><br><span class="line">  PKI_PATH=<span class="variable">$&#123;KUBE_PATH&#125;</span>/pki/etcd</span><br><span class="line">  CA_CERT=<span class="variable">$&#123;PKI_PATH&#125;</span>/ca.crt</span><br><span class="line">  CA_KEY=<span class="variable">$&#123;PKI_PATH&#125;</span>/ca.key</span><br><span class="line"></span><br><span class="line">  check_file <span class="string">&quot;<span class="variable">$&#123;CA_CERT&#125;</span>&quot;</span></span><br><span class="line">  check_file <span class="string">&quot;<span class="variable">$&#123;CA_KEY&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># generate etcd server certificate</span></span><br><span class="line">  <span class="comment"># /etc/kubernetes/pki/etcd/server</span></span><br><span class="line">  CART_NAME=<span class="variable">$&#123;PKI_PATH&#125;</span>/server</span><br><span class="line">  subject_alt_name=$(cert::get_subject_alt_name <span class="variable">$&#123;CART_NAME&#125;</span>)</span><br><span class="line">  cert::gen_cert <span class="string">&quot;<span class="variable">$&#123;CART_NAME&#125;</span>&quot;</span> <span class="string">&quot;peer&quot;</span> <span class="string">&quot;/CN=etcd-server&quot;</span> <span class="string">&quot;<span class="variable">$&#123;CAER_DAYS&#125;</span>&quot;</span> <span class="string">&quot;<span class="variable">$&#123;subject_alt_name&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># generate etcd peer certificate</span></span><br><span class="line">  <span class="comment"># /etc/kubernetes/pki/etcd/peer</span></span><br><span class="line">  CART_NAME=<span class="variable">$&#123;PKI_PATH&#125;</span>/peer</span><br><span class="line">  subject_alt_name=$(cert::get_subject_alt_name <span class="variable">$&#123;CART_NAME&#125;</span>)</span><br><span class="line">  cert::gen_cert <span class="string">&quot;<span class="variable">$&#123;CART_NAME&#125;</span>&quot;</span> <span class="string">&quot;peer&quot;</span> <span class="string">&quot;/CN=etcd-peer&quot;</span> <span class="string">&quot;<span class="variable">$&#123;CAER_DAYS&#125;</span>&quot;</span> <span class="string">&quot;<span class="variable">$&#123;subject_alt_name&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># generate etcd healthcheck-client certificate</span></span><br><span class="line">  <span class="comment"># /etc/kubernetes/pki/etcd/healthcheck-client</span></span><br><span class="line">  CART_NAME=<span class="variable">$&#123;PKI_PATH&#125;</span>/healthcheck-client</span><br><span class="line">  cert::gen_cert <span class="string">&quot;<span class="variable">$&#123;CART_NAME&#125;</span>&quot;</span> <span class="string">&quot;client&quot;</span> <span class="string">&quot;/O=system:masters/CN=kube-etcd-healthcheck-client&quot;</span> <span class="string">&quot;<span class="variable">$&#123;CAER_DAYS&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># generate apiserver-etcd-client certificate</span></span><br><span class="line">  <span class="comment"># /etc/kubernetes/pki/apiserver-etcd-client</span></span><br><span class="line">  check_file <span class="string">&quot;<span class="variable">$&#123;CA_CERT&#125;</span>&quot;</span></span><br><span class="line">  check_file <span class="string">&quot;<span class="variable">$&#123;CA_KEY&#125;</span>&quot;</span></span><br><span class="line">  PKI_PATH=<span class="variable">$&#123;KUBE_PATH&#125;</span>/pki</span><br><span class="line">  CART_NAME=<span class="variable">$&#123;PKI_PATH&#125;</span>/apiserver-etcd-client</span><br><span class="line">  cert::gen_cert <span class="string">&quot;<span class="variable">$&#123;CART_NAME&#125;</span>&quot;</span> <span class="string">&quot;client&quot;</span> <span class="string">&quot;/O=system:masters/CN=kube-apiserver-etcd-client&quot;</span> <span class="string">&quot;<span class="variable">$&#123;CAER_DAYS&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># restart etcd</span></span><br><span class="line">  docker ps | awk <span class="string">&#x27;/k8s_etcd/&#123;print$1&#125;&#x27;</span> | xargs -r -I <span class="string">&#x27;&#123;&#125;&#x27;</span> docker restart &#123;&#125; || <span class="literal">true</span></span><br><span class="line">  <span class="built_in">log</span>::info <span class="string">&quot;restarted etcd&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">cert::<span class="function"><span class="title">update_master_cert</span></span>() &#123;</span><br><span class="line">  PKI_PATH=<span class="variable">$&#123;KUBE_PATH&#125;</span>/pki</span><br><span class="line">  CA_CERT=<span class="variable">$&#123;PKI_PATH&#125;</span>/ca.crt</span><br><span class="line">  CA_KEY=<span class="variable">$&#123;PKI_PATH&#125;</span>/ca.key</span><br><span class="line"></span><br><span class="line">  check_file <span class="string">&quot;<span class="variable">$&#123;CA_CERT&#125;</span>&quot;</span></span><br><span class="line">  check_file <span class="string">&quot;<span class="variable">$&#123;CA_KEY&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># generate apiserver server certificate</span></span><br><span class="line">  <span class="comment"># /etc/kubernetes/pki/apiserver</span></span><br><span class="line">  CART_NAME=<span class="variable">$&#123;PKI_PATH&#125;</span>/apiserver</span><br><span class="line">  subject_alt_name=$(cert::get_subject_alt_name <span class="variable">$&#123;CART_NAME&#125;</span>)</span><br><span class="line">  cert::gen_cert <span class="string">&quot;<span class="variable">$&#123;CART_NAME&#125;</span>&quot;</span> <span class="string">&quot;server&quot;</span> <span class="string">&quot;/CN=kube-apiserver&quot;</span> <span class="string">&quot;<span class="variable">$&#123;CAER_DAYS&#125;</span>&quot;</span> <span class="string">&quot;<span class="variable">$&#123;subject_alt_name&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># generate apiserver-kubelet-client certificate</span></span><br><span class="line">  <span class="comment"># /etc/kubernetes/pki/apiserver-kubelet-client</span></span><br><span class="line">  CART_NAME=<span class="variable">$&#123;PKI_PATH&#125;</span>/apiserver-kubelet-client</span><br><span class="line">  cert::gen_cert <span class="string">&quot;<span class="variable">$&#123;CART_NAME&#125;</span>&quot;</span> <span class="string">&quot;client&quot;</span> <span class="string">&quot;/O=system:masters/CN=kube-apiserver-kubelet-client&quot;</span> <span class="string">&quot;<span class="variable">$&#123;CAER_DAYS&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># generate kubeconf for controller-manager,scheduler,kubectl and kubelet</span></span><br><span class="line">  <span class="comment"># /etc/kubernetes/controller-manager,scheduler,admin,kubelet.conf</span></span><br><span class="line">  cert::update_kubeconf <span class="string">&quot;<span class="variable">$&#123;KUBE_PATH&#125;</span>/controller-manager&quot;</span></span><br><span class="line">  cert::update_kubeconf <span class="string">&quot;<span class="variable">$&#123;KUBE_PATH&#125;</span>/scheduler&quot;</span></span><br><span class="line">  cert::update_kubeconf <span class="string">&quot;<span class="variable">$&#123;KUBE_PATH&#125;</span>/admin&quot;</span></span><br><span class="line">  <span class="comment"># check kubelet.conf</span></span><br><span class="line">  <span class="comment"># https://github.com/kubernetes/kubeadm/issues/1753</span></span><br><span class="line">  <span class="built_in">set</span> +e</span><br><span class="line">  grep kubelet-client-current.pem /etc/kubernetes/kubelet.conf &gt; /dev/null 2&gt;&amp;1</span><br><span class="line">  kubelet_cert_auto_update=$?</span><br><span class="line">  <span class="built_in">set</span> -e</span><br><span class="line">  <span class="keyword">if</span> [[ <span class="string">&quot;<span class="variable">$kubelet_cert_auto_update</span>&quot;</span> == <span class="string">&quot;0&quot;</span> ]]; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">log</span>::warning <span class="string">&quot;does not need to update kubelet.conf&quot;</span></span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    cert::update_kubeconf <span class="string">&quot;<span class="variable">$&#123;KUBE_PATH&#125;</span>/kubelet&quot;</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># generate front-proxy-client certificate</span></span><br><span class="line">  <span class="comment"># use front-proxy-client ca</span></span><br><span class="line">  CA_CERT=<span class="variable">$&#123;PKI_PATH&#125;</span>/front-proxy-ca.crt</span><br><span class="line">  CA_KEY=<span class="variable">$&#123;PKI_PATH&#125;</span>/front-proxy-ca.key</span><br><span class="line">  check_file <span class="string">&quot;<span class="variable">$&#123;CA_CERT&#125;</span>&quot;</span></span><br><span class="line">  check_file <span class="string">&quot;<span class="variable">$&#123;CA_KEY&#125;</span>&quot;</span></span><br><span class="line">  CART_NAME=<span class="variable">$&#123;PKI_PATH&#125;</span>/front-proxy-client</span><br><span class="line">  cert::gen_cert <span class="string">&quot;<span class="variable">$&#123;CART_NAME&#125;</span>&quot;</span> <span class="string">&quot;client&quot;</span> <span class="string">&quot;/CN=front-proxy-client&quot;</span> <span class="string">&quot;<span class="variable">$&#123;CAER_DAYS&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># restart apiserve, controller-manager, scheduler and kubelet</span></span><br><span class="line">  docker ps | awk <span class="string">&#x27;/k8s_kube-apiserver/&#123;print$1&#125;&#x27;</span> | xargs -r -I <span class="string">&#x27;&#123;&#125;&#x27;</span> docker restart &#123;&#125; || <span class="literal">true</span></span><br><span class="line">  <span class="built_in">log</span>::info <span class="string">&quot;restarted kube-apiserver&quot;</span></span><br><span class="line">  docker ps | awk <span class="string">&#x27;/k8s_kube-controller-manager/&#123;print$1&#125;&#x27;</span> | xargs -r -I <span class="string">&#x27;&#123;&#125;&#x27;</span> docker restart &#123;&#125; || <span class="literal">true</span></span><br><span class="line">  <span class="built_in">log</span>::info <span class="string">&quot;restarted kube-controller-manager&quot;</span></span><br><span class="line">  docker ps | awk <span class="string">&#x27;/k8s_kube-scheduler/&#123;print$1&#125;&#x27;</span> | xargs -r -I <span class="string">&#x27;&#123;&#125;&#x27;</span> docker restart &#123;&#125; || <span class="literal">true</span></span><br><span class="line">  <span class="built_in">log</span>::info <span class="string">&quot;restarted kube-scheduler&quot;</span></span><br><span class="line">  systemctl restart kubelet</span><br><span class="line">  <span class="built_in">log</span>::info <span class="string">&quot;restarted kubelet&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">main</span></span>() &#123;</span><br><span class="line">  <span class="built_in">local</span> node_tpye=<span class="variable">$1</span></span><br><span class="line">  </span><br><span class="line">  KUBE_PATH=/etc/kubernetes</span><br><span class="line">  CAER_DAYS=3285</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> <span class="variable">$&#123;node_tpye&#125;</span> <span class="keyword">in</span></span><br><span class="line">    <span class="comment"># etcd)</span></span><br><span class="line">	  <span class="comment"># # update etcd certificates</span></span><br><span class="line">    <span class="comment">#   cert::update_etcd_cert</span></span><br><span class="line">    <span class="comment"># ;;</span></span><br><span class="line">    master)</span><br><span class="line">      <span class="comment"># backup $KUBE_PATH to $KUBE_PATH.old-$(date +%Y%m%d)</span></span><br><span class="line">      cert::backup_file <span class="string">&quot;<span class="variable">$&#123;KUBE_PATH&#125;</span>&quot;</span></span><br><span class="line">	    <span class="comment"># update master certificates and kubeconf</span></span><br><span class="line">      cert::update_master_cert</span><br><span class="line">    ;;</span><br><span class="line">    all)</span><br><span class="line">      <span class="comment"># backup $KUBE_PATH to $KUBE_PATH.old-$(date +%Y%m%d)</span></span><br><span class="line">      cert::backup_file <span class="string">&quot;<span class="variable">$&#123;KUBE_PATH&#125;</span>&quot;</span></span><br><span class="line">      <span class="comment"># update etcd certificates</span></span><br><span class="line">      cert::update_etcd_cert</span><br><span class="line">      <span class="comment"># update master certificates and kubeconf</span></span><br><span class="line">      cert::update_master_cert</span><br><span class="line">    ;;</span><br><span class="line">    *)</span><br><span class="line">      <span class="built_in">log</span>::err <span class="string">&quot;unknow, unsupported certs type: <span class="variable">$&#123;node_tpye&#125;</span>, supported type: all, master&quot;</span></span><br><span class="line">  example:</span><br><span class="line">    <span class="string">&#x27;\033[32m./update-kubeadm-cert.sh all\033[0m&#x27;</span> update all etcd certificates, master certificates and kubeconf</span><br><span class="line">      /etc/kubernetes</span><br><span class="line">      ├── admin.conf</span><br><span class="line">      ├── controller-manager.conf</span><br><span class="line">      ├── scheduler.conf</span><br><span class="line">      ├── kubelet.conf</span><br><span class="line">      └── pki</span><br><span class="line">          ├── apiserver.crt</span><br><span class="line">          ├── apiserver-etcd-client.crt</span><br><span class="line">          ├── apiserver-kubelet-client.crt</span><br><span class="line">          ├── front-proxy-client.crt</span><br><span class="line">          └── etcd</span><br><span class="line">              ├── healthcheck-client.crt</span><br><span class="line">              ├── peer.crt</span><br><span class="line">              └── server.crt</span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;\033[32m./update-kubeadm-cert.sh master\033[0m&#x27;</span> update only master certificates and kubeconf</span><br><span class="line">      /etc/kubernetes</span><br><span class="line">      ├── admin.conf</span><br><span class="line">      ├── controller-manager.conf</span><br><span class="line">      ├── scheduler.conf</span><br><span class="line">      ├── kubelet.conf</span><br><span class="line">      └── pki</span><br><span class="line">          ├── apiserver.crt</span><br><span class="line">          ├── apiserver-kubelet-client.crt</span><br><span class="line">          └── front-proxy-client.crt</span><br><span class="line"><span class="string">&quot;</span></span><br><span class="line"><span class="string">      exit 1</span></span><br><span class="line"><span class="string">    esac</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">main &quot;</span><span class="variable">$@</span><span class="string">&quot;</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+<h1 id="测试环境可更改年限超前验证集群可用性"><a href="#测试环境可更改年限超前验证集群可用性" class="headerlink" title="测试环境可更改年限超前验证集群可用性"></a>测试环境可更改年限超前验证集群可用性</h1><p>master1</p>
+<p><img src="/images/kubectl-get-kube-system-master1.png" class="lazyload" data-srcset="/images/kubectl-get-kube-system-master1.png" srcset="data:image/png;base64,666" alt=""></p>
+<p>master2<br><img src="/images/kubectl-get-kube-system-master2.png" class="lazyload" data-srcset="/images/kubectl-get-kube-system-master2.png" srcset="data:image/png;base64,666" alt=""></p>
+<p>master3<br><img src="/images/kubectl-get-kube-system-master3.png" class="lazyload" data-srcset="/images/kubectl-get-kube-system-master3.png" srcset="data:image/png;base64,666" alt=""></p>
+
+  
+  
+    
+    <div class='footer'>
+      
+      
+      
+        <div class='copyright'>
+          <blockquote>
+            
+              
+                <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+              
+            
+              
+                <p>本文永久链接是：<a href=https://www.asjin.com/2021/08/20/kubernetes%E8%AF%81%E4%B9%A6%E4%BF%AE%E5%A4%8D/>https://www.asjin.com/2021/08/20/kubernetes%E8%AF%81%E4%B9%A6%E4%BF%AE%E5%A4%8D/</a></p>
+              
+            
+          </blockquote>
+        </div>
+      
+      
+    </div>
+  
+  
+    
+
+
+  <div class='article-meta' id="bottom">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-08-21T14:18:36+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：Aug 21, 2021</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/rhca/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>rhca</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/linux/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>linux</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/cloud/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>cloud</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>故障处理</p></a></div>
+
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://www.asjin.com/2021/08/20/kubernetes%E8%AF%81%E4%B9%A6%E4%BF%AE%E5%A4%8D/&title=复盘kubernetes证书到期故障状与集群快速恢复 - 逝水锦遥&pics=/images/favicon/k8s-logo.png&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://www.asjin.com/2021/08/20/kubernetes%E8%AF%81%E4%B9%A6%E4%BF%AE%E5%A4%8D/&title=复盘kubernetes证书到期故障状与集群快速恢复 - 逝水锦遥&pics=/images/favicon/k8s-logo.png&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://service.weibo.com/share/share.php?url=https://www.asjin.com/2021/08/20/kubernetes%E8%AF%81%E4%B9%A6%E4%BF%AE%E5%A4%8D/&title=复盘kubernetes证书到期故障状与集群快速恢复 - 逝水锦遥&pics=/images/favicon/k8s-logo.png&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png">
+          
+        </a>
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </div>
+
+
+  
+  
+
+  
+    <div class="prev-next">
+      
+      
+        <a class='next' href='/2021/07/09/isilon-%E8%8D%A3%E4%B9%8B%E8%81%94%E5%AD%98%E5%82%A8%E9%85%8D%E9%A2%9D%E8%B0%83%E6%95%B4%E8%87%AA%E5%8A%A8%E5%8C%96/'>
+          <p class='title'>isilon-荣之联存储配额调整自动化<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class='content'>[toc]
+isilon-荣之联存储配额调整自动化
+说明应避免爆盘的分险，每个部门对应有多套存储与相应配额，然、当各部门对应存储使用率高的时候需要去调整配额 ，每次带来的重复性较高，耗用时间较大...</p>
+        </a>
+      
+    </div>
+  
+</article>
+
+
+  
+
+  <article class="post white-box reveal floatable" id="comments">
+    <p ct><i class='fas fa-comments'></i> 评论</p>
+    
+    <div id="valine_container" class="valine_thread">
+  <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+</div>
+
+  </article>
+
+
+
+
+
+
+</div>
+<aside class='l_side'>
+  
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper floatable desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#kubelet-client-current-pem-%E7%89%B9%E6%AE%8A%E8%AF%81%E4%B9%A6%E7%9A%84%E6%9B%B4%E6%96%B0"><span class="toc-text">kubelet-client-current.pem 特殊证书的更新</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-text">说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C-%E6%A8%A1%E6%8B%9F%E6%95%85%E9%9A%9C%E5%A4%8D%E7%9B%98"><span class="toc-text">操作: 模拟故障复盘</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E4%B8%AA-master-%E8%AF%81%E4%B9%A6-%E5%8F%98%E6%9B%B4%E9%85%8D%E7%BD%AE"><span class="toc-text">三个 master 证书 变更配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%90%E4%B8%AA%E9%87%8D%E5%90%AF-controller"><span class="toc-text">逐个重启  controller</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E8%B0%83%E6%95%B4%E5%88%B0%E8%AF%81%E4%B9%A6%E5%88%B0%E6%9C%9F%E7%9A%8470-90-%E4%B9%8B%E9%97%B4"><span class="toc-text">时间调整到证书到期的70-90% 之间</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%87%8D%E5%90%AFkubelet-%E8%8E%B7%E5%8F%96%E8%AF%81%E4%B9%A6"><span class="toc-text">重启kubelet 获取证书</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81kubelet-%E6%9C%9F%E5%90%8E%E6%98%AF%E5%90%A6%E6%9C%89%E6%95%88"><span class="toc-text">验证kubelet 期后是否有效</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9B%B4%E6%94%B9%E7%B3%BB%E7%BB%9F%E6%97%B6%E9%97%B4%E8%B6%85%E5%89%8D%E5%A4%8D%E7%8E%B0%E6%95%85%E9%9A%9C"><span class="toc-text">更改系统时间超前复现故障</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%BF%AB%E9%80%9F%E6%81%A2%E5%A4%8D"><span class="toc-text">操作快速恢复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#update-kubeadm-cert-sh-%E6%9B%B4%E6%96%B0%E4%B8%89%E4%B8%AAmaster-%E8%AF%81%E4%B9%A6"><span class="toc-text">update-kubeadm-cert.sh 更新三个master 证书</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%86%E8%AF%81%E4%B9%A6%E5%B9%B4%E9%99%90%E8%B0%83%E6%95%B4%E5%88%B0-3285-%E5%8D%B3-9%E5%B9%B4"><span class="toc-text">将证书年限调整到 3285 即 9年</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E8%AF%81%E4%B9%A6%E6%89%80%E6%9C%89master-%E8%AF%81%E4%B9%A6%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%93%8D%E5%BA%94"><span class="toc-text">验证证书所有master 证书与服务响应</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%98%E6%96%B9%E4%B8%80%E5%B9%B4%E4%B8%80%E7%BB%AD"><span class="toc-text">官方一年一续</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC%E6%96%B9%E5%BC%8F"><span class="toc-text">脚本方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E4%B8%AA-master-%E8%AF%81%E4%B9%A6-%E5%8F%98%E6%9B%B4%E9%85%8D%E7%BD%AE-1"><span class="toc-text">三个 master 证书 变更配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%90%E4%B8%AA%E9%87%8D%E5%90%AF-controller-1"><span class="toc-text">逐个重启  controller</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#master-%E5%92%8C-node-%E9%87%8D%E5%90%AFkuebet-%E4%B8%BB%E5%8A%A8%E6%9B%B4%E6%96%B0kuebelet-client-%E8%AF%81%E4%B9%A6%E5%88%B0%E5%8D%81%E5%B9%B4"><span class="toc-text">master 和 node 重启kuebet 主动更新kuebelet client 证书到十年</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E8%AF%81%E4%B9%A6%E5%B9%B4%E9%99%90%E8%B0%83%E6%95%B4%E5%88%B0-3285-%E5%8D%B3-9%E5%B9%B4-1"><span class="toc-text">将证书年限调整到 3285 即 9年</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%93%E6%A0%87%E7%AD%BE"><span class="toc-text">打标签</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E8%AF%81%E4%B9%A6%E5%88%B0%E6%9C%9F%E6%97%B6%E9%97%B4"><span class="toc-text">查看证书到期时间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#image-pull-Error%E6%8A%A5%E9%94%99"><span class="toc-text">image pull Error报错</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kubernetes%E7%BB%84%E4%BB%B6%E8%B0%83%E5%88%B0node%E6%97%B6"><span class="toc-text">kubernetes组件调到node时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%A0%B9%E8%AF%81%E4%B9%A6%E7%9A%84%E6%97%B6%E9%97%B4%E5%B9%B4%E9%99%90"><span class="toc-text">查看根证书的时间年限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%84-%E8%AF%81%E4%B9%A6%E6%9B%B4%E6%96%B0%E8%84%9A%E6%9C%AC"><span class="toc-text">附: 证书更新脚本</span></a></li></ol></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+
+        
+        
+          <!--此文件用来存放一些不方便取值的变量-->
+<!--思路大概是将值藏到重加载的区域内-->
+
+<script>
+  window.pdata={}
+  pdata.ispage=true;
+  pdata.postTitle="复盘kubernetes证书到期故障状与集群快速恢复";
+  pdata.commentPath="";
+  pdata.commentPlaceholder="";
+
+  var l_header=document.getElementById("l_header");
+  
+  l_header.classList.remove("show");
+  
+</script>
+
+        
+      </div>
+      
+  
+  <footer class="footer clearfix">
+    <br><br>
+    
+      
+
+
+
+
+		<div class="github-badge">
+          <span class="badge-subject">Powered</span><span class="badge-value bg-green">Hexo</span>
+        </div>
+        <div class="github-badge">
+          <span class="badge-subject">Hosted</span><span class="badge-value bg-green">Aliyun</span>
+        </div>
+        <div class="github-badge">
+          <span class="badge-subject">DNS</span><span class="badge-value bg-green">Aliyun</span>
+        </div>
+        <div class="github-badge">
+          <span class="badge-subject">Theme</span><span class="badge-value bg-green"><a target="_blank" rel="noopener" href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.1.6">Volantis</a ></span>
+        </div>
+        <div class="github-badge">
+          <span class="badge-subject">UV</span><span class="badge-value bg-red" id="busuanzi_value_site_uv"></span>
+        </div>
+        <div class="github-badge">
+          <span class="badge-subject">PV</span><span class="badge-value bg-red" id="busuanzi_value_site_pv"></span>
+        </div>
+        <div class="github-badge">
+          <span class="badge-subject"><i class="fa fa-copyright"></i></span><span class="badge-value bg-green">BY-NC-SA 4.0</span>
+        </div>
+		<div class="github-badge">
+		  <span class="badge-subject">晋ICP备</span><span class="badge-value bg-green"> <a target="_blank" rel="noopener" href='https://beian.miit.gov.cn/'>17010575号-4 </a>
+        </div>
+
+		<div class="github-badge">
+		  <span class="badge-subject">晋ICP备</span><span class="badge-value bg-green"> <a target="_blank" rel="noopener" href='https://beian.miit.gov.cn/'>17010575号-1 </a>
+        </div>
+<!--		
+        <div class="aplayer-container"cn/' style="color:#f72b07"> 晋ICP备-17010575号-1 </a>
+		  <a target="_blank" rel="noopener" href='https://beian.miit.gov.cn/' style="color:#f72b07"> 晋ICP备-17010575号-4 </a>
+		</div>
+-->
+
+
+<!--
+        <div class='copyright'>
+        <p><a href="/">Copyright © 2017-2021 asjin.com</a></p>
+
+        </div>
+-->
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <div><p><a href="/">Copyright © 2017-2021 asjin.com</a></p>
+</div>
+        
+      
+    
+  </footer>
+
+
+      <a id="s-top" class="fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+  </div>
+  <div>
+    <script>
+window.volantis={};
+window.volantis.loadcss=document.getElementById("loadcss");
+/********************脚本懒加载函数********************************/
+function loadScript(src, cb) {
+var HEAD = document.getElementsByTagName('head')[0] || document.documentElement;
+var script = document.createElement('script');
+script.setAttribute('type','text/javascript');
+if (cb) script.onload = cb;
+script.setAttribute('src', src);
+HEAD.appendChild(script);
+}
+//https://github.com/filamentgroup/loadCSS
+var loadCSS = function( href, before, media, attributes ){
+	var doc = window.document;
+	var ss = doc.createElement( "link" );
+	var ref;
+	if( before ){
+		ref = before;
+	}
+	else {
+		var refs = ( doc.body || doc.getElementsByTagName( "head" )[ 0 ] ).childNodes;
+		ref = refs[ refs.length - 1];
+	}
+	var sheets = doc.styleSheets;
+	if( attributes ){
+		for( var attributeName in attributes ){
+			if( attributes.hasOwnProperty( attributeName ) ){
+				ss.setAttribute( attributeName, attributes[attributeName] );
+			}
+		}
+	}
+	ss.rel = "stylesheet";
+	ss.href = href;
+	ss.media = "only x";
+	function ready( cb ){
+		if( doc.body ){
+			return cb();
+		}
+		setTimeout(function(){
+			ready( cb );
+		});
+	}
+	ready( function(){
+		ref.parentNode.insertBefore( ss, ( before ? ref : ref.nextSibling ) );
+	});
+	var onloadcssdefined = function( cb ){
+		var resolvedHref = ss.href;
+		var i = sheets.length;
+		while( i-- ){
+			if( sheets[ i ].href === resolvedHref ){
+				return cb();
+			}
+		}
+		setTimeout(function() {
+			onloadcssdefined( cb );
+		});
+	};
+	function loadCB(){
+		if( ss.addEventListener ){
+			ss.removeEventListener( "load", loadCB );
+		}
+		ss.media = media || "all";
+	}
+	if( ss.addEventListener ){
+		ss.addEventListener( "load", loadCB);
+	}
+	ss.onloadcssdefined = onloadcssdefined;
+	onloadcssdefined( loadCB );
+	return ss;
+};
+</script>
+<script>
+  
+  loadCSS("https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14/css/all.min.css", window.volantis.loadcss);
+  
+  
+  
+  
+</script>
+<!-- required -->
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5/dist/jquery.min.js"></script>
+
+<script>
+  function pjax_fancybox() {
+    $(".md .gallery").find("img").each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("class", "fancybox");
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 判断当前页面是否存在描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".md .gallery").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  function SCload_fancybox() {
+    if ($(".md .gallery").find("img").length == 0) return;
+    loadCSS("https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css", document.getElementById("loadcss"));
+    setTimeout(function() {
+      loadScript('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js', pjax_fancybox)
+    }, 1);
+  };
+  $(function () {
+    SCload_fancybox();
+  });
+</script>
+
+
+<!-- internal -->
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+        var imgs=["https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/001.jpg", "https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/003.jpg", "https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/004.jpg", "https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/006.jpg", "https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/007.jpg", "https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/010.jpg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+	  function Pjax_backstretch(){
+        
+          $('#cover-backstretch').backstretch(
+            imgs,
+          {
+            duration: "10000",
+            fade: "1500"
+          });
+        
+	  }
+	  loadScript("https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js",Pjax_backstretch)
+    </script>
+  
+
+
+
+
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+
+
+  
+  
+    <script async src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  
+
+
+
+
+  <script src="/js/clipboard.min.js"></script>
+<script>
+    var clipboard = new ClipboardJS('.btn-copy', {
+        target: function (trigger) {
+            return trigger.nextElementSibling
+        }
+    });
+    function wait(callback, seconds) {
+        var timelag = null;
+        timelag = window.setTimeout(callback, seconds)
+    }
+    function pjax_initCopyCode() {
+		if($(".highlight .code pre").length+$(".article pre code").length==0)return;
+        var copyHtml = '';
+        copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+        copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+        copyHtml += '</button>';
+        $(".highlight .code pre").before(copyHtml);
+        $(".article pre code").before(copyHtml);
+        clipboard.off('success').on('success', function (e) {
+            let $btn = $(e.trigger);
+            $btn.addClass('copied');
+            let $icon = $($btn.find('i'));
+            $icon.removeClass('fa-copy');
+            $icon.addClass('fa-check-circle');
+            let $span = $($btn.find('span'));
+            $span[0].innerText = 'COPIED';
+            wait(function () {
+                $icon.removeClass('fa-check-circle');
+                $icon.addClass('fa-copy');
+                $span[0].innerText = 'COPY'
+            }, 2000)
+        });
+        clipboard.off('error').on('error', function (e) {
+            e.clearSelection();
+            let $btn = $(e.trigger);
+            $btn.addClass('copy-failed');
+            let $icon = $($btn.find('i'));
+            $icon.removeClass('fa-copy');
+            $icon.addClass('fa-times-circle');
+            let $span = $($btn.find('span'));
+            $span[0].innerText = 'COPY FAILED';
+            wait(function () {
+                $icon.removeClass('fa-times-circle');
+                $icon.addClass('fa-copy');
+                $span[0].innerText = 'COPY'
+            }, 2000)
+        })
+    }
+    $(function () {
+        pjax_initCopyCode()
+    });
+</script>
+
+
+
+
+
+
+
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js"></script>
+
+
+<script>
+  var GUEST_INFO = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link,header,thumbnail'.split(',').filter(function (item) {
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick', 'mail', 'link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function (item) {
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+
+  function emoji(path, idx, ext) {
+    return path + "/" + path + "-" + idx + "." + ext;
+  }
+
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+
+  function pjax_valine() {
+    if(!document.querySelectorAll("#valine_container")[0])return;
+
+    let pagePlaceholder = pdata.commentPlaceholder || "有什么话想对逝水锦遥说 ~ 🤩 🤩 🤩";
+
+    let path = pdata.commentPath;
+    if (path.length == 0) {
+      let defaultPath = '';
+      path = defaultPath || decodeURI(window.location.pathname);
+    }
+
+    var valine = new Valine();
+    valine.init({
+      el: '#valine_container',
+      meta: meta,
+      placeholder: pagePlaceholder,
+      path: path,
+      appId: "mU9G19KxW55lQdM1IopBa8ub-gzGzoHsz",
+      appKey: "euxLLgJC8WtoQHqBj7fLIgp1",
+      pageSize: '',
+      avatar: 'monsterid',
+      lang: '',
+      visitor: '',
+      highlight: '',
+      mathJax: '',
+      enableQQ: 'true',
+      recordIP: 'false',
+      requiredFields: requiredFields,
+      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
+      emojiMaps: emojiMaps
+    })
+  }
+
+  $(function () {
+    pjax_valine();
+  });
+</script>
+
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js" data-pjax></script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/app.min.js"></script>
+
+
+
+<!-- optional -->
+
+  <script>
+const SearchServiceimagePath="https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/img/";
+const ROOT =  ("/" || "/").endsWith('/') ? ("/" || "/") : ("//" || "/" );
+
+$('.input.u-search-input').one('focus',function(){
+	
+		loadScript('https://cdn.jsdelivr.net/npm/hexo-theme-volantis@4.1.6/source/js/search/hexo.min.js',setSearchService);
+	
+})
+
+function listenSearch(){
+  
+    customSearch = new HexoSearch({
+      imagePath: SearchServiceimagePath
+    });
+  
+}
+function setSearchService() {
+	listenSearch();
+	
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+function listennSidebarTOC() {
+  const navItems = document.querySelectorAll(".toc li");
+  if (!navItems.length) return;
+  const sections = [...navItems].map((element) => {
+    const link = element.querySelector(".toc-link");
+    const target = document.getElementById(
+      decodeURI(link.getAttribute("href")).replace("#", "")
+    );
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      window.scrollTo({
+		top: target.offsetTop + 100,
+		
+		behavior: "smooth"
+		
+	  });
+    });
+    return target;
+  });
+
+  function activateNavByIndex(target) {
+    if (target.classList.contains("active-current")) return;
+
+    document.querySelectorAll(".toc .active").forEach((element) => {
+      element.classList.remove("active", "active-current");
+    });
+    target.classList.add("active", "active-current");
+    let parent = target.parentNode;
+    while (!parent.matches(".toc")) {
+      if (parent.matches("li")) parent.classList.add("active");
+      parent = parent.parentNode;
+    }
+  }
+
+  function findIndex(entries) {
+    let index = 0;
+    let entry = entries[index];
+    if (entry.boundingClientRect.top > 0) {
+      index = sections.indexOf(entry.target);
+      return index === 0 ? 0 : index - 1;
+    }
+    for (; index < entries.length; index++) {
+      if (entries[index].boundingClientRect.top <= 0) {
+        entry = entries[index];
+      } else {
+        return sections.indexOf(entry.target);
+      }
+    }
+    return sections.indexOf(entry.target);
+  }
+
+  function createIntersectionObserver(marginTop) {
+    marginTop = Math.floor(marginTop + 10000);
+    let intersectionObserver = new IntersectionObserver(
+      (entries, observe) => {
+        let scrollHeight = document.documentElement.scrollHeight + 100;
+        if (scrollHeight > marginTop) {
+          observe.disconnect();
+          createIntersectionObserver(scrollHeight);
+          return;
+        }
+        let index = findIndex(entries);
+        activateNavByIndex(navItems[index]);
+      },
+      {
+        rootMargin: marginTop + "px 0px -100% 0px",
+        threshold: 0,
+      }
+    );
+    sections.forEach((element) => {
+      element && intersectionObserver.observe(element);
+    });
+  }
+  createIntersectionObserver(document.documentElement.scrollHeight);
+}
+
+document.addEventListener("DOMContentLoaded", listennSidebarTOC);
+document.addEventListener("pjax:success", listennSidebarTOC);
+</script>
+
+<!-- more -->
+
+
+
+
+    
+      
+
+
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script>
+
+
+<script>
+    var pjax;
+    document.addEventListener('DOMContentLoaded', function () {
+      pjax = new Pjax({
+        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox])',
+        selectors: [
+          "title",
+          "#l_cover",
+          "#pjax-container",
+          "#pjax-header-nav-list"
+        ],
+        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+        timeout: 5000
+      });
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+      //window.stop(); // 相当于点击了浏览器的停止按钮
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      window.subData = null; // 移除标题（用于一二级导航栏切换处）
+      if (typeof $.fancybox != "undefined") {
+        $.fancybox.close();    // 关闭弹窗
+      }
+      volantis.$switcher.removeClass('active'); // 关闭移动端激活的搜索框
+      volantis.$header.removeClass('z_search-open'); // 关闭移动端激活的搜索框
+      volantis.$wrapper.removeClass('sub'); // 跳转页面时关闭二级导航
+
+      // 解绑事件 避免重复监听
+      volantis.$topBtn.unbind('click');
+      $('.menu a').unbind('click');
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+	  
+    });
+
+    document.addEventListener('pjax:complete', function () {
+      // 关于百度统计对 SPA 页面的处理：
+      // 方案一：百度统计>管理>单页应用设置中，打开开启按钮即可对SPA进行统计。 https://tongji.baidu.com/web/help/article?id=324
+      // 方案二：取消注释下列代码。 https://tongji.baidu.com/web/help/article?id=235
+       
+
+      // 关于谷歌统计对 SPA 页面的处理：
+      // 当应用以动态方式加载内容并更新地址栏中的网址时，也应该更新通过 gtag.js 存储的网页网址。
+      // https://developers.google.cn/analytics/devguides/collection/gtagjs/single-page-applications?hl=zh-cn
+      
+	 
+
+      $('.nav-main').find('.list-v').not('.menu-phone').removeAttr("style",""); // 移除小尾巴的移除
+      $('.menu-phone.list-v').removeAttr("style",""); // 移除小尾巴的移除
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+      try{
+          if (typeof $.fancybox == "undefined") {
+            SCload_fancybox();
+          } else {
+            pjax_fancybox();
+          }
+        
+		  Pjax_backstretch()
+        
+        
+        
+        
+        
+          pjax_initCopyCode();
+        
+        
+          pjax_valine();
+        
+        
+        
+        
+      } catch (e) {
+        console.log(e);
+      }
+	  
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+	  
+      window.location.href = e.triggerElement.href;
+    });
+</script>
+
+    
+  </div>
+</body>
+</html>
