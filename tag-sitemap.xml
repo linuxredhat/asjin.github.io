@@ -345,13 +345,6 @@
     </url>
 
     <url>
-        <loc>https://www.asjin.com/tags/%25E6%2595%2585%25E9%259A%259C%25E5%25A4%2584%25E7%2590%2586/</loc>
-        <lastmod>2021-08-21T06:39:42.151Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>https://www.asjin.com/tags/kubernetes-%25E5%25AE%2589%25E8%25A3%2585%25E9%2583%25A8%25E7%25BD%25B2/</loc>
         <lastmod>2021-08-21T06:41:17.010Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -367,14 +360,21 @@
 
     <url>
         <loc>https://www.asjin.com/tags/linux/</loc>
-        <lastmod>2021-08-21T06:42:13.664Z</lastmod>
+        <lastmod>2021-08-22T09:07:22.320Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://www.asjin.com/tags/cloud/</loc>
-        <lastmod>2021-08-21T06:42:13.664Z</lastmod>
+        <lastmod>2021-08-22T09:07:22.320Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://www.asjin.com/tags/%25E6%2595%2585%25E9%259A%259C%25E5%25A4%2584%25E7%2590%2586/</loc>
+        <lastmod>2021-08-22T09:07:22.320Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
